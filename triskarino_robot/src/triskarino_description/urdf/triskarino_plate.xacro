@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+
+<xacro:macro name="plate" params="name xyz rpy scale color">
+  <joint name="${name}_plate_joint" type="fixed">
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+      <parent link="base_link"/>
+      <child link="${name}_plate"/>
+  </joint>
+
+    <link name="${name}_plate">
+        <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh scale="${scale}" filename="package://triskarino_description/meshes/hexagon.dae"/>
+        </geometry>
+        <material name="${color}"/>
+      </visual>  
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder length="0.006" radius="0.170"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <mass value="0.520"/>
+        <origin xyz="0 0 0"/>
+        <inertia ixx="0.003328" ixy="0.0" ixz="0.0"
+                 iyy="0.003328" iyz="0.0"
+                 izz="0.006656" />
+      </inertial>
+      
+    </link>
+
+</xacro:macro>
+
+    
+</robot>

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <xacro:include filename="triskarino_plate.xacro" />
+    <xacro:include filename="triskarino_motor.xacro" />
+    <xacro:include filename="triskarino_wheel.xacro" />
+    <xacro:include filename="triskarino_cover.xacro" />
+    <xacro:include filename="triskarino_top.xacro" />
+
+
+    <material name="blue">
+        <color rgba="0.2 0.2 1 1"/>
+    </material>
+    <!-- BASE LINK -->
+
+    <link name="base_link">
+
+    </link>
+
+
+    <!-- BOTTOM PLATE-->
+
+    <xacro:plate name="bottom" xyz="0 0 -0.01875" rpy="0 0 0" scale="0.75 0.75 0.75" color="blue"/>
+
+    <!-- TOP PLATE-->
+
+    <xacro:plate name="top" xyz="0 0 0.0375" rpy="0 0 0" scale="0.75 0.75 0.75" color="blue"/>
+
+    <!-- LEFT MOTOR-->
+
+    <xacro:motor name="left" xyz="-0.0605 0.03495 0.0" rpy_joint="0 0 1.6" rpy_link="0 0 ${5*pi/6}" box_size="0.06 0.04 0.0375" color = "blue" parent="base_link"/>
+
+    <!-- RIGHT MOTOR-->
+
+    <xacro:motor name="right" xyz="0.0605 0.03495 0.0" rpy_joint="0 0 1.6" rpy_link="0 0 ${pi/6}" box_size="0.06 0.04 0.0375" color = "blue" parent="base_link"/>
+
+    <!-- LEFT WHEEL -->
+
+    <xacro:wheel name="left" parent="left_motor_link" color="blue" xyz="-0.11898 0.068695 0" rpy="-${pi/2} 0 ${pi/3}" radius="0.0375" length="0.01875" mass="0.1"/>
+
+    <!-- RIGHT WHEEL -->
+
+    <xacro:wheel name="right" parent="right_motor_link" color="blue" xyz="0.11898 0.068695 0" rpy="-${pi/2} 0 ${-pi/3}" radius="0.0375" length="0.01875" mass="0.1"/>
+    
+     <!-- COVER -->
+
+    <xacro:cover xyz="0 0 -0.01" parent="base_link" rpy="0 0 0" scale="0.030 0.030 0.005" color="blue"/>
+
+    <!-- TOP -->
+
+    <xacro:top xyz="0 0 0.21" parent="cover_link" rpy="0 0 0" color="blue" radius="0.2" length="0.3" mass="0.5"/>
+
+</robot>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+
+<xacro:macro name="top" params="xyz rpy parent color radius length mass">
+  
+    <joint name="top_joint" type="fixed">
+        <parent link="${parent}"/>
+        <child link="top_link"/>
+        <origin xyz="${xyz}" rpy="${rpy}" />
+    </joint>
+
+    <link name="top_link">
+        <visual>
+            <geometry>
+                <cylinder radius="${radius}" length="${length}"/>
+            </geometry>
+            <material name="${color}"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="${radius}" length="${length}"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="${mass}" length="${length}" radius="${radius}">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+
+</xacro:macro>
+
+    
+</robot>
