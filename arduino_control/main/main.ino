@@ -1,8 +1,8 @@
 #include <NewPing.h>
-#include <ViRHas.h>
 #include <CytronMotorDriver.h>
 #include <Encoder.h>
 #include <ArduinoJson.h>
+#include <ViRHas.h>
 
 
 // SONARS
@@ -83,17 +83,16 @@ ViRHaS virhas = ViRHaS(motor1, motor2, motor3, ENCODER[0], ENCODER[1], ENCODER[2
 
 //Json that will continuosly be updated to send odometry and sonar information over Serial
 StaticJsonDocument<128> sensor_msg;
-JsonArray sonarData = doc.createNestedArray("sonarData");
-JsonArray odometryPos = doc.createNestedArray("odometryPos");
-JsonArray odometryVel = doc.createNestedArray("odometryVel");
+JsonArray sonarData = sensor_msg.createNestedArray("sonarData");
+JsonArray odometryPos = sensor_msg.createNestedArray("odometryPos");
+JsonArray odometryVel = sensor_msg.createNestedArray("odometryVel");
 //Json that will continuosly be updated with the twist messages
 StaticJsonDocument<32> twist_msg;
-JsonArray twistData = doc.createNestedArray("twist");
+JsonArray twistData = twist_msg.createNestedArray("twist");
 
 void setup() {
-  createSensorMsg()
-  initializeSensorMsg()
-  initializeTwistMsg()
+  initializeSensorMsg();
+  initializeTwistMsg();
   virhas.setKpid(2, 1, 0.7);
   virhas.stop();
   Serial.begin(115200);
@@ -103,7 +102,7 @@ void setup() {
 void loop() {
   
   // Reading data from SONAR
-  sonarData();
+  getSonarData();
 
   // I have cm[i] filled with information at this point, let's put it in the Json
   fillSonarMsg();
@@ -119,10 +118,10 @@ void loop() {
   if(twistData[0] == 0.0 & twistData[1] == 0.0 & twistData[2] == 0.0){
     virhas.stop();
   }else{
-    moveRobot()
+    moveRobot();
   }
 
-  fillOdometryMsg()
+  fillOdometryMsg();
   serializeJson(sensor_msg, Serial);
   
 }
@@ -157,7 +156,10 @@ void resetTwistMsg(){
 
 //Uses the contents of the twist message to move the robot
 void moveRobot(){
-  virhas.run2(twistData[1]*_MAX_SPEED, twistData[0]*_MAX_SPEED, twistData[2]*_MAX_ANGULAR);
+  int speedY = twistData[1];
+  int speedX = twistData[0];
+  int speedTh = twistData[2];
+  virhas.run2(speedY * _MAX_SPEED, speedX * _MAX_SPEED, speedTh * _MAX_ANGULAR);
   virhas.PIDLoop();
 }
 
@@ -189,7 +191,7 @@ void fillSonarMsg(){
 
 
 
-void sonarData(){
+void getSonarData(){
   
   for(uint8_t i = 0; i < SONAR_NUM; i++){
     

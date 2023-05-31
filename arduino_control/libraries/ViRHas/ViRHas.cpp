@@ -10,7 +10,7 @@
      motor drivers "MR001-004"
 */
 
-#include "ViRHaS.h"
+#include "ViRHas.h"
 
 
 ViRHaS::ViRHaS(CytronMD & m1, CytronMD & m2,CytronMD & m3, Encoder & e1, Encoder & e2, Encoder & e3)
