@@ -113,17 +113,30 @@ void loop() {
   }
 
   
-
+  float speedY = twistData[1];
+  float speedX = twistData[0];
+  float speedTh = twistData[2];
+  Serial.print("SpeedX");
+  Serial.print(speedX * 0.01);
+  Serial.print(",");
+  Serial.print("SpeedY");
+  Serial.print(speedY * 0.01);
+  Serial.print(",");
+  Serial.print("SpeedTh");
+  Serial.print(speedTh * 0.01);
   //If twist message is equal to the default one, the robot does not move
-  if(twistData[0] == 0.0 & twistData[1] == 0.0 & twistData[2] == 0.0){
+  if(speedX * 0.01 == 0.0 & speedY * 0.01 == 0.0 & speedTh * 0.01 == 0.0){
+    Serial.println("Not trying to move");
     virhas.stop();
   }else{
+    Serial.println("Actually trying to move");
     moveRobot();
   }
 
   fillOdometryMsg();
-  serializeJson(sensor_msg, Serial);
-  
+  //serializeJson(sensor_msg, Serial);
+  //Serial.write("\n");
+ 
 }
 
 void initializeSensorMsg(){
@@ -156,10 +169,10 @@ void resetTwistMsg(){
 
 //Uses the contents of the twist message to move the robot
 void moveRobot(){
-  int speedY = twistData[1];
-  int speedX = twistData[0];
-  int speedTh = twistData[2];
-  virhas.run2(speedY * _MAX_SPEED, speedX * _MAX_SPEED, speedTh * _MAX_ANGULAR);
+  float speedY = twistData[1];
+  float speedX = twistData[0];
+  float speedTh = twistData[2];
+  virhas.run2(speedY * _MAX_SPEED * 0.01, speedX * _MAX_SPEED * 0.01, speedTh * _MAX_ANGULAR * 0.01);
   virhas.PIDLoop();
 }
 

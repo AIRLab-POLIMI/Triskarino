@@ -1,1 +1,1 @@
-Arduino Libraries used in the project
+For information on installing libraries, see: http://www.arduino.cc/en/Guide/Libraries
