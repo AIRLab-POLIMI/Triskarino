@@ -67,6 +67,10 @@ NewPing sonar[SONAR_NUM] = {
 #define _MAX_SPEED 80 //cm/s
 #define _MAX_ANGULAR 6.28//rad/s
 
+//Variables needed to read data reliably
+const byte numChars = 32;
+char receivedChars[numChars];
+boolean newData = false;
 
 // Configure the motor driver.
 CytronMD motor1(PWM_PWM, _1_1A, _1_1B); // PWM 2A = Pin 8, PWM 2B = Pin 7. Motor 1 : right robot
@@ -107,29 +111,15 @@ void loop() {
   // I have cm[i] filled with information at this point, let's put it in the Json
   fillSonarMsg();
   
-  // I send data to raspberry according to the speed of his while True
-  if(Serial.available() > 0){
-    fillTwistMsg();
-  }
-
-  
+  recvWithStartEndMarkers();
+  fillTwistMsg();
   float speedY = twistData[1];
   float speedX = twistData[0];
   float speedTh = twistData[2];
-  Serial.print("SpeedX");
-  Serial.print(speedX * 0.01);
-  Serial.print(",");
-  Serial.print("SpeedY");
-  Serial.print(speedY * 0.01);
-  Serial.print(",");
-  Serial.print("SpeedTh");
-  Serial.print(speedTh * 0.01);
   //If twist message is equal to the default one, the robot does not move
-  if(speedX * 0.01 == 0.0 & speedY * 0.01 == 0.0 & speedTh * 0.01 == 0.0){
-    Serial.println("Not trying to move");
+  if(speedX == 0.0 & speedY == 0.0 & speedTh == 0.0){
     virhas.stop();
   }else{
-    Serial.println("Actually trying to move");
     moveRobot();
   }
 
@@ -137,6 +127,42 @@ void loop() {
   //serializeJson(sensor_msg, Serial);
   //Serial.write("\n");
  
+}
+
+void recvWithStartEndMarkers() {
+    static boolean recvInProgress = false;
+    static byte ndx = 0;
+    char startMarker = '{';
+    char endMarker = '}';
+    char rc;
+ 
+    while (Serial.available() > 0 && newData == false) {
+        rc = Serial.read();
+
+        if (recvInProgress == true) {
+            if (rc != endMarker) {
+                receivedChars[ndx] = rc;
+                ndx++;
+                if (ndx >= numChars) {
+                    ndx = numChars - 1;
+                }
+            }
+            else {
+                receivedChars[ndx] = rc;
+                ndx++;
+                receivedChars[ndx] = '\0'; // terminate the string
+                recvInProgress = false;
+                ndx = 0;
+                newData = true;
+            }
+        }
+
+        else if (rc == startMarker) {
+            recvInProgress = true;
+            receivedChars[ndx] = rc;
+            ndx++;
+        }
+    }
 }
 
 void initializeSensorMsg(){
@@ -177,15 +203,22 @@ void moveRobot(){
 }
 
 
+
 void fillTwistMsg(){
-   const auto deser_err = deserializeJson(twist_msg, Serial);
-  // Test if parsing succeeds.
-  if (deser_err) {
-    Serial.print(F("deserializeJson() failed: "));
-    Serial.println(deser_err.f_str());
-    return;
-  }
+
+   if (newData == true) {
+      Serial.println(receivedChars);
+      const auto deser_err = deserializeJson(twist_msg, receivedChars);
+      // Test if parsing succeeds.
+      if (deser_err) {
+          Serial.print(F("deserializeJson() failed: "));
+          Serial.println(deser_err.f_str());
+        return;
+      }
+      newData = false;
+    }
 }
+
 
 void fillOdometryMsg(){
   odometryPos[0] = virhas.getPosX();
