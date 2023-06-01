@@ -112,16 +112,14 @@ void loop() {
   fillSonarMsg();
   
   recvWithStartEndMarkers();
-  
+  fillTwistMsg();
   float speedY = twistData[1];
   float speedX = twistData[0];
   float speedTh = twistData[2];
   //If twist message is equal to the default one, the robot does not move
   if(speedX == 0.0 & speedY == 0.0 & speedTh == 0.0){
-    Serial.println("Not trying to move");
     virhas.stop();
   }else{
-    Serial.println("Actually trying to move");
     moveRobot();
   }
 
@@ -150,6 +148,8 @@ void recvWithStartEndMarkers() {
                 }
             }
             else {
+                receivedChars[ndx] = rc;
+                ndx++;
                 receivedChars[ndx] = '\0'; // terminate the string
                 recvInProgress = false;
                 ndx = 0;
@@ -159,6 +159,8 @@ void recvWithStartEndMarkers() {
 
         else if (rc == startMarker) {
             recvInProgress = true;
+            receivedChars[ndx] = rc;
+            ndx++;
         }
     }
 }
@@ -203,6 +205,7 @@ void moveRobot(){
 
 
 void fillTwistMsg(){
+
    if (newData == true) {
       Serial.println(receivedChars);
       const auto deser_err = deserializeJson(twist_msg, receivedChars);
