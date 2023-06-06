@@ -9,8 +9,8 @@ import serial
 class ArduinoManagerNode():
     NODE_NAME = "arduino_manager"
     def __init__(self,port='/dev/ttyACM0', baud_rate=115200, timeout=1, listen_to_sensors_rate = 5):
-        #self.ser = serial.Serial(port, baud_rate, timeout=timeout)
-        #self.ser.flush()
+        self.ser = serial.Serial(port, baud_rate, timeout=timeout)
+        self.ser.flush()
         rospy.init_node("arduino_manager")
         self.odom_pub = rospy.Publisher('odom', Odometry, queue_size=10)
         self.odom_broadcaster = tf.TransformBroadcaster()
@@ -30,10 +30,15 @@ class ArduinoManagerNode():
             line = self.ser.readline()
             if line == "":
                 rate.sleep()
-            msg = json.loads(line)
-            self.publish_odometry(msg)
-            self.publish_sonar(msg)
-            break
+            try:
+                line = line.decode("utf-8")
+                msg = json.loads(line)
+                self.publish_odometry(msg)
+                self.publish_sonar(msg)
+                break
+            except:
+                rospy.loginfo("Couldn't deserialize Sensors Message was broken: " + str(line))
+                break
     
     def publish_sonar(self,msg):
         sonarData = Sonar()

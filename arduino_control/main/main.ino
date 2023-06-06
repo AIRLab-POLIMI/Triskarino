@@ -210,7 +210,6 @@ void moveRobot(){
 
 
 void fillTwistMsg(){
-    Serial.println(receivedChars);
     const auto deser_err = deserializeJson(twist_msg, receivedChars);
     // Test if parsing succeeds.
     if (deser_err) {
