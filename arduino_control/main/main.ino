@@ -120,12 +120,11 @@ void loop() {
      speedY = twistData[1];
      speedX = twistData[0];
      speedTh = twistData[2];
+     
      //If twist message is equal to the default one, the robot does not move
      if(speedX == 0.0 & speedY == 0.0 & speedTh == 0.0){
-       Serial.println("STOP");
        virhas.stop();
      }else{
-       Serial.println("MOV");
        moveRobot();
     }
 
