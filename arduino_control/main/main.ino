@@ -4,7 +4,6 @@
 #include <ArduinoJson.h>
 #include <ViRHas.h>
 
-
 // SONARS
 
 #define SONAR_NUM 4 
@@ -104,29 +103,31 @@ void setup() {
 }
 
 void loop() {
-  
-  // Reading data from SONAR
-  getSonarData();
 
-  // I have cm[i] filled with information at this point, let's put it in the Json
-  fillSonarMsg();
-  
   recvWithStartEndMarkers();
-  fillTwistMsg();
-  float speedY = twistData[1];
-  float speedX = twistData[0];
-  float speedTh = twistData[2];
-  //If twist message is equal to the default one, the robot does not move
-  if(speedX == 0.0 & speedY == 0.0 & speedTh == 0.0){
-    virhas.stop();
-  }else{
-    moveRobot();
-  }
 
-  fillOdometryMsg();
-  //serializeJson(sensor_msg, Serial);
-  //Serial.write("\n");
- 
+  if (newData == true){
+     //Reading data from SONAR
+     getSonarData();
+     // I have cm[i] filled with information at this point, let's put it in the Json
+     fillSonarMsg();
+     fillTwistMsg();
+     float speedY = twistData[1];
+     float speedX = twistData[0];
+     float speedTh = twistData[2];
+     //If twist message is equal to the default one, the robot does not move
+     if(speedX == 0.0 & speedY == 0.0 & speedTh == 0.0){
+       virhas.stop();
+     }else{
+       moveRobot();
+    }
+
+    fillOdometryMsg();
+    serializeJson(sensor_msg, Serial);
+    Serial.write("\n");
+    newData = false;
+  }
+  
 }
 
 void recvWithStartEndMarkers() {
@@ -205,18 +206,13 @@ void moveRobot(){
 
 
 void fillTwistMsg(){
-
-   if (newData == true) {
-      Serial.println(receivedChars);
-      const auto deser_err = deserializeJson(twist_msg, receivedChars);
-      // Test if parsing succeeds.
-      if (deser_err) {
-          Serial.print(F("deserializeJson() failed: "));
-          Serial.println(deser_err.f_str());
-        return;
-      }
-      newData = false;
-    }
+    Serial.println(receivedChars);
+    const auto deser_err = deserializeJson(twist_msg, receivedChars);
+    // Test if parsing succeeds.
+    if (deser_err) {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(deser_err.f_str());
+     }
 }
 
 
