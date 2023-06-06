@@ -2,7 +2,7 @@ import rospy
 from geometry_msgs.msg import Twist
 from evdev import InputDevice
 
-INPUT_PATH = "/dev/input/event18"
+INPUT_PATH = "/dev/input/event3"
 RATE=10
 ANALOG_MAX_VALUE = 32768
 BUTTON_MAX_VALUE = 255
@@ -38,6 +38,7 @@ class TeleopManagerNode():
             elif event.code == 5: 
                 #Get the value and put it as positive rotation on z axis
                 twist_msg.angular.z = event.value / BUTTON_MAX_VALUE
+                
             else:
                 continue
         
