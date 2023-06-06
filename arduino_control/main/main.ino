@@ -4,7 +4,6 @@
 #include <ArduinoJson.h>
 #include <ViRHas.h>
 
-
 // SONARS
 
 #define SONAR_NUM 4 
@@ -72,6 +71,11 @@ const byte numChars = 32;
 char receivedChars[numChars];
 boolean newData = false;
 
+//Variables to read speed
+float speedX = 0.0;
+float speedY = 0.0;
+float speedTh = 0.0;
+
 // Configure the motor driver.
 CytronMD motor1(PWM_PWM, _1_1A, _1_1B); // PWM 2A = Pin 8, PWM 2B = Pin 7. Motor 1 : right robot
 CytronMD motor2(PWM_PWM, _2_1A, _2_1B);   // PWM 1A = Pin 12, PWM 1B = Pin 11. Motor 2 : Atras
@@ -104,29 +108,33 @@ void setup() {
 }
 
 void loop() {
-  
-  // Reading data from SONAR
-  getSonarData();
 
-  // I have cm[i] filled with information at this point, let's put it in the Json
-  fillSonarMsg();
-  
   recvWithStartEndMarkers();
-  fillTwistMsg();
-  float speedY = twistData[1];
-  float speedX = twistData[0];
-  float speedTh = twistData[2];
-  //If twist message is equal to the default one, the robot does not move
-  if(speedX == 0.0 & speedY == 0.0 & speedTh == 0.0){
-    virhas.stop();
-  }else{
-    moveRobot();
-  }
 
-  fillOdometryMsg();
-  //serializeJson(sensor_msg, Serial);
-  //Serial.write("\n");
- 
+  if (newData == true){
+     //Reading data from SONAR
+     getSonarData();
+     // I have cm[i] filled with information at this point, let's put it in the Json
+     fillSonarMsg();
+     fillTwistMsg();
+     speedY = twistData[1];
+     speedX = twistData[0];
+     speedTh = twistData[2];
+     //If twist message is equal to the default one, the robot does not move
+     if(speedX == 0.0 & speedY == 0.0 & speedTh == 0.0){
+       Serial.println("STOP");
+       virhas.stop();
+     }else{
+       Serial.println("MOV");
+       moveRobot();
+    }
+
+    fillOdometryMsg();
+    serializeJson(sensor_msg, Serial);
+    Serial.write("\n");
+    newData = false;
+  }
+  
 }
 
 void recvWithStartEndMarkers() {
@@ -195,28 +203,21 @@ void resetTwistMsg(){
 
 //Uses the contents of the twist message to move the robot
 void moveRobot(){
-  float speedY = twistData[1];
-  float speedX = twistData[0];
-  float speedTh = twistData[2];
-  virhas.run2(speedY * _MAX_SPEED * 0.01, speedX * _MAX_SPEED * 0.01, speedTh * _MAX_ANGULAR * 0.01);
+ 
+  virhas.run2(speedY * _MAX_SPEED, speedX * _MAX_SPEED, speedTh * _MAX_ANGULAR);
   virhas.PIDLoop();
 }
 
 
 
 void fillTwistMsg(){
-
-   if (newData == true) {
-      Serial.println(receivedChars);
-      const auto deser_err = deserializeJson(twist_msg, receivedChars);
-      // Test if parsing succeeds.
-      if (deser_err) {
-          Serial.print(F("deserializeJson() failed: "));
-          Serial.println(deser_err.f_str());
-        return;
-      }
-      newData = false;
-    }
+    Serial.println(receivedChars);
+    const auto deser_err = deserializeJson(twist_msg, receivedChars);
+    // Test if parsing succeeds.
+    if (deser_err) {
+        Serial.print(F("deserializeJson() failed: "));
+        Serial.println(deser_err.f_str());
+     }
 }
 
 

@@ -5,7 +5,7 @@ import json
 port = '/dev/ttyACM0'
 baud_rate=115200
 timeout=3
-sleep_time = 2
+sleep_time = 5
 
 if __name__ == "__main__":
     print("Connection starting...")
@@ -22,12 +22,15 @@ if __name__ == "__main__":
         line = ser.readline()
         line = line.decode("utf-8")
         print("line is..." + str(line))
+        line = ser.readline()
+        line = line.decode("utf-8")
+        print("line is..." + str(line))
         ser.flushInput()
-      #  try:
-      #      msg = json.loads(line)
-     #       print(msg)
-     #   except:
-     #       print("First Line got truncated probably")
+        try:
+             msg = json.loads(line)
+             print(msg)
+        except:
+            print("First Line got truncated probably")
         speedX = float(input("Insert speedX.."))
         speedY = float(input("Insert speedY.."))
         speedTh = float(input("Insert speedTh.."))
