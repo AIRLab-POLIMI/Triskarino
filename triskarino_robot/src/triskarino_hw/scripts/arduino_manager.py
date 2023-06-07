@@ -6,44 +6,48 @@ import json
 from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
 import serial 
 
+PUBLISHER_QUEUE_SIZE = 100
+
 class ArduinoManagerNode():
     NODE_NAME = "arduino_manager"
-    def __init__(self,port='/dev/ttyACM0', baud_rate=115200, timeout=1, listen_to_sensors_rate = 5):
+    def __init__(self,port='/dev/ttyACM0', baud_rate=115200, timeout=1):
         self.ser = serial.Serial(port, baud_rate, timeout=timeout)
         self.ser.flush()
         rospy.init_node("arduino_manager")
-        self.odom_pub = rospy.Publisher('odom', Odometry, queue_size=10)
+        self.odom_pub = rospy.Publisher('odom', Odometry, queue_size=PUBLISHER_QUEUE_SIZE)
         self.odom_broadcaster = tf.TransformBroadcaster()
-        self.sonar_pub = rospy.Publisher('sonar',Sonar,queue_size=10)
-        self.listen_to_sensors_rate = listen_to_sensors_rate
+        self.sonar_pub = rospy.Publisher('sonar',Sonar,queue_size=PUBLISHER_QUEUE_SIZE)
         self.listen_to_twist = rospy.Subscriber("cmd_vel", Twist, self.move_robot)
     
     def move_robot(self,twist_data):
         twist_msg = {"twist": [twist_data.linear.x, twist_data.linear.y, twist_data.angular.z]}
         serialized_twist_msg = json.dumps(twist_msg)
+        rospy.loginfo("Received Twist message is: " + str(twist_msg))
         self.ser.write(bytes((serialized_twist_msg+'\n'), encoding='utf-8'))
         self.read_and_publish_sensors_data()
     
+
+
     def read_and_publish_sensors_data(self):
-        rate = rospy.Rate(self.listen_to_sensors_rate)
         while not rospy.is_shutdown():
             line = self.ser.readline()
             if line == "":
-                rate.sleep()
+                continue
             try:
-                line = line.decode("utf-8")
-                msg = json.loads(line)
+                line = line.decode("utf-8-sig")
+                stripped_decoded_line = line.strip('\n')
+                msg = json.loads(stripped_decoded_line)
                 self.publish_odometry(msg)
                 self.publish_sonar(msg)
                 break
-            except:
-                rospy.loginfo("Couldn't deserialize Sensors Message was broken: " + str(line))
+            except Exception as e:
+                rospy.loginfo("Couldn't deserialize Sensors Message was broken: " + str(stripped_decoded_line) + " Error message was " + str(e))
                 break
     
     def publish_sonar(self,msg):
         sonarData = Sonar()
         for i in range(4):
-            sonarData[i] = msg["sonarData"][i]
+            sonarData.distances[i] = msg["sonarData"][i]
         self.sonar_pub.publish(sonarData)
     
     def publish_odometry(self,msg):

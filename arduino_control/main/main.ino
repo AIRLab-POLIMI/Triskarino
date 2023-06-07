@@ -3,7 +3,6 @@
 #include <Encoder.h>
 #include <ArduinoJson.h>
 #include <ViRHas.h>
-
 // SONARS
 
 #define SONAR_NUM 4 
@@ -67,7 +66,7 @@ NewPing sonar[SONAR_NUM] = {
 #define _MAX_ANGULAR 6.28//rad/s
 
 //Variables needed to read data reliably
-const byte numChars = 32;
+const byte numChars = 64;
 char receivedChars[numChars];
 boolean newData = false;
 
@@ -214,7 +213,10 @@ void fillTwistMsg(){
     // Test if parsing succeeds.
     if (deser_err) {
         Serial.print(F("deserializeJson() failed: "));
-        Serial.println(deser_err.f_str());
+        Serial.print(deser_err.f_str());
+        Serial.print(" ");
+        Serial.println(receivedChars);
+
      }
 }
 
