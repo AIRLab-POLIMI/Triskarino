@@ -28,7 +28,7 @@ char receivedChars[numChars];
 boolean newData = false;
 
 //Json that will continuosly be updated with action, color and wait
-StaticJsonDocument<48> action_msg;
+StaticJsonDocument<128> action_msg;
 
 
 void setup() {
@@ -61,17 +61,17 @@ uint32_t get_color(){
 void do_action(){
     if(action_msg["action"] == "colorWipe")
         colorWipe(get_color(),action_msg["wait"]);
-    else if action_msg["action"] == "rainbow"
+    else if (action_msg["action"] == "rainbow")
         rainbow(action_msg["wait"]);
-    else if action_msg["action"] == "rainbowane":
-        rainbowane(wait);
-    else if action_msg["action"] == "off":
+    else if (action_msg["action"] == "rainbowane")
+        rainbowane(action_msg["wait"]);
+    else if (action_msg["action"] == "off")
         turn_off();
 
 }
 
 void fillActionMsg(){
-    Serial.println(receivedChars)
+    Serial.println(receivedChars);
     const auto deser_err = deserializeJson(action_msg, receivedChars);
     // Test if parsing succeeds.
     if (deser_err) {
@@ -169,5 +169,3 @@ void rainbow(int wait) {
     delay(wait);  // Pause for a moment
   }
 }
-
-
