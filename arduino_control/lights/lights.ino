@@ -71,6 +71,7 @@ void do_action(){
 }
 
 void fillActionMsg(){
+    Serial.println(receivedChars)
     const auto deser_err = deserializeJson(action_msg, receivedChars);
     // Test if parsing succeeds.
     if (deser_err) {
