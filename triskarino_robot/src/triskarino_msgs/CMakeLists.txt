@@ -18,6 +18,7 @@ add_message_files(
   FILES
   Sonar.msg
   Light.msg
+  Sound.msg
 )
 
 generate_messages(

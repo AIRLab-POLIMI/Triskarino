@@ -13,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 
-catkin_install_python(PROGRAMS ./scripts/arduino_manager.py ./scripts/teleop_manager.py ./scripts/lights_manager.py
+catkin_install_python(PROGRAMS ./scripts/arduino_manager.py ./scripts/teleop_manager.py ./scripts/lights_manager.py ./scripts/sound_manager.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
