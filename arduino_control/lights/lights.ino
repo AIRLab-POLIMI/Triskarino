@@ -28,7 +28,7 @@ char receivedChars[numChars];
 boolean newData = false;
 
 //Json that will continuosly be updated with action, color and wait
-StaticJsonDocument<48> action_msg;
+StaticJsonDocument<128> action_msg;
 
 
 void setup() {
@@ -71,6 +71,7 @@ void do_action(){
 }
 
 void fillActionMsg(){
+    Serial.println(receivedChars);
     const auto deser_err = deserializeJson(action_msg, receivedChars);
     // Test if parsing succeeds.
     if (deser_err) {
