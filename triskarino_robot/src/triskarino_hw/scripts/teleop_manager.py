@@ -12,6 +12,9 @@ PUBLISHER_QUEUE_SIZE = 10
 MAX_ANGULAR = 0.3
 MAX_LINEAR = 0.3
 ROUND_DIGITS = 2
+#LIGHT CONSTANTS
+WAIT = 10
+COLOR = [255,0,0]
 
 
 class TeleopManagerNode():
@@ -36,7 +39,11 @@ class TeleopManagerNode():
             #RT: Event Code 5 value goes from 0 to 255
             #Idea Parse UntiL Event.Code is equal to 0 (which is what the input uses to separate input from different buttons) and then send it to twist
             #RIGHT ANALOG BUTTON: Event Code 318, values 1 or 0
-            print("Event Code is " + str(event.code) + " Event Value is " + str(event.value))
+            #Button A is 304, values 1 or 0
+            #Button B is 305, values 1 or 0 
+            #Button X is 307 values 1 or 0
+            #Button Y is 308 values 1 or 0
+            #print("Event Code is " + str(event.code) + " Event Value is " + str(event.value))
             if event.code == 0:
                 if publish_twist:
                     self.twist_pub.publish(twist_msg)
@@ -65,6 +72,26 @@ class TeleopManagerNode():
                 twist_msg.linear.y = 0
                 twist_msg.angular.z = 0
                 publish_twist = True
+            elif event.code == 304:
+                light_msg.color = COLOR
+                light_msg.delay = WAIT
+                light_msg.action = "colorWipe"
+                publish_light = True
+            elif event.code == 307:
+                light_msg.color = COLOR
+                light_msg.delay = WAIT
+                light_msg.action = "rainbow"
+                publish_light = True
+            elif event.code == 308:
+                light_msg.color = COLOR
+                light_msg.delay = WAIT
+                light_msg.action = "rainbowane"
+                publish_light = True
+            elif event.code == 308:
+                light_msg.color = COLOR
+                light_msg.delay = WAIT
+                light_msg.action = "off"
+                publish_light = True
             else:
                 continue
         

@@ -61,11 +61,11 @@ uint32_t get_color(){
 void do_action(){
     if(action_msg["action"] == "colorWipe")
         colorWipe(get_color(),action_msg["wait"]);
-    else if action_msg["action"] == "rainbow"
+    else if (action_msg["action"] == "rainbow")
         rainbow(action_msg["wait"]);
-    else if action_msg["action"] == "rainbowane":
-        rainbowane(wait);
-    else if action_msg["action"] == "off":
+    else if (action_msg["action"] == "rainbowane")
+        rainbowane(action_msg["wait"]);
+    else if (action_msg["action"] == "off")
         turn_off();
 
 }
@@ -168,5 +168,3 @@ void rainbow(int wait) {
     delay(wait);  // Pause for a moment
   }
 }
-
-
