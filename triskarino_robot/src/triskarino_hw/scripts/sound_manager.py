@@ -10,13 +10,15 @@ class SoundManagerNode():
         self.sound_subscriber = rospy.Subscriber("sound", Sound, self.play_sound)
     
     def play_sound(self,sound_data):
-        command_string = "lxterminal -e omxplayer --vol " + str(sound_data.volume) + " " + str(sound_data.filepath) + " &"
-        run(command_string,shell = True)
-       
+        command_string = "play -v " + str(sound_data.volume) + " " + str(sound_data.filepath) + " &"
+        run(command_string,shell = False)
+        
+        
 
 if __name__ == '__main__':
     rospy.loginfo("AO")
     node = SoundManagerNode()
+    rospy.loginfo("Executing from " + str(run("pwd",capture_output=True)))
     rospy.loginfo( node.NODE_NAME + " running..." )
     rospy.spin()
     rospy.loginfo( node.NODE_NAME + " stopped." )
