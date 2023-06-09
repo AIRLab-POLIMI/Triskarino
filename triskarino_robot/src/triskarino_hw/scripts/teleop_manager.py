@@ -2,6 +2,7 @@ import rospy
 from geometry_msgs.msg import Twist
 from triskarino_msgs.msg import Light, Sound
 from evdev import InputDevice
+import time
 
 INPUT_PATH = "/dev/input/event3"
 ANALOG_MAX_VALUE = 32768
@@ -17,6 +18,8 @@ WAIT = 10
 COLOR = [255,0,0]
 #SOUND CONSTANTS
 VOLUME=600
+#PROFILING
+TIMESTAMPS = []
 
 class TeleopManagerNode():
     NODE_NAME = "teleop_manager"
@@ -48,11 +51,11 @@ class TeleopManagerNode():
             #Button B is 305, values 1 or 0 
             #Button X is 307 values 1 or 0
             #Button Y is 308 values 1 or 0
-            print("Event Code is " + str(event.code) + " Event Value is " + str(event.value))
+            #print("Event Code is " + str(event.code) + " Event Value is " + str(event.value))
             if event.code == 0:
                 #EVENT CODE 0 is sent after each input, (analogic with both x and y components counts as one input but it is read with two iteration cycles)
                 if publish_twist:
-                    print(twist_msg)
+                    rospy.loginfo(str(twist_msg) + " published at time " + str(time.time()))
                     self.twist_pub.publish(twist_msg)
                     publish_twist = False
                 if publish_light:
@@ -85,35 +88,36 @@ class TeleopManagerNode():
                 twist_msg.linear.y = 0
                 twist_msg.angular.z = 0
                 publish_twist = True
-            elif event.code == 304:
+            elif event.code == 304 and event.value == 1:
                 #BUTTON A, activates colorwipe
                 light_msg.color = COLOR
                 light_msg.delay = WAIT
                 light_msg.action = "colorWipe"
                 publish_light = True
-            elif event.code == 307:
+            elif event.code == 307 and event.value == 1:
                 #BUTTON X, activates rainbow
                 light_msg.color = COLOR
                 light_msg.delay = WAIT
                 light_msg.action = "rainbow"
                 publish_light = True
-            elif event.code == 308:
+            elif event.code == 308 and event.value == 1:
                 #BUTTON Y, activates rainbowane
                 light_msg.color = COLOR
                 light_msg.delay = WAIT
                 light_msg.action = "rainbowane"
                 publish_light = True
-            elif event.code == 305:
+            elif event.code == 305 and event.value == 1:
                 #BUTTON B, turns lights off
                 light_msg.color = COLOR
                 light_msg.delay = WAIT
                 light_msg.action = "off"
                 publish_light = True
-            elif event.code == 420:
-                #LB plays acknowledged sound from r2d2
-                sound_msg.filepath = "../resources/acknowledged.wav"
+            elif event.code == 311 and event.value == 1:
+                #RB plays acknowledged sound from r2d2
+                sound_msg.filepath = "Triskarino/triskarino_robot/src/triskarino_hw/resources/acknowledged.wav"
                 sound_msg.volume = VOLUME
                 publish_sound = True
+                
 
             else:
                 continue
