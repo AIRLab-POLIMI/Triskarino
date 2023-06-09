@@ -9,32 +9,20 @@ import time
 
 TIMESTAMPS = []
 
+
 PUBLISHER_QUEUE_SIZE = 100
 
-class ArduinoManagerNode():
-    NODE_NAME = "arduino_manager"
+class ArduinoSensorManagerNode():
+    NODE_NAME = "arduino_sensor_manager"
     def __init__(self,port='/dev/ttyACM0', baud_rate=115200, timeout=1):
         self.ser = serial.Serial(port, baud_rate, timeout=timeout)
         self.ser.flush()
-        rospy.init_node("arduino_manager")
+        rospy.init_node("arduino_sensor_manager")
         self.odom_pub = rospy.Publisher('odom', Odometry, queue_size=PUBLISHER_QUEUE_SIZE)
         self.odom_broadcaster = tf.TransformBroadcaster()
         self.sonar_pub = rospy.Publisher('sonar',Sonar,queue_size=PUBLISHER_QUEUE_SIZE)
-        self.listen_to_twist = rospy.Subscriber("cmd_vel", Twist, self.move_robot)
+        self.listen_to_twist = rospy.Subscriber("cmd_vel", Twist, self.read_and_publish_sensors_data)
     
-    def move_robot(self,twist_data):
-        TIMESTAMPS.append({"function":"move_start","time":time.time()})
-        #twist_msg = ":"+str(twist_data.linear.x)+","+str(twist_data.linear.y)+","+str(twist_data.angular.z)
-        #rospy.loginfo("Received Twist message is: " + str(twist_msg))
-        #self.ser.write(bytes((twist_msg+'\n'), encoding='utf-8'))
-        twist_msg = {"twist": [twist_data.linear.x, twist_data.linear.y, twist_data.angular.z]}
-        serialized_twist_msg = json.dumps(twist_msg)
-        rospy.loginfo("Received Twist message is: " + str(twist_msg))
-        self.ser.write(bytes((serialized_twist_msg+'\n'), encoding='utf-8'))
-        TIMESTAMPS.append({"function":"move_written","time":time.time()})
-        self.read_and_publish_sensors_data()
-        TIMESTAMPS.append({"function":"move_read_publish","time":time.time()})
-        rospy.loginfo("move_robot finished " + str(TIMESTAMPS))
 
     def read_and_publish_sensors_data(self):
         while not rospy.is_shutdown():
@@ -93,7 +81,7 @@ class ArduinoManagerNode():
 if __name__ == '__main__':
     print("AO")
     rospy.loginfo("AO")
-    node = ArduinoManagerNode()
+    node = ArduinoSensorManagerNode()
     rospy.loginfo( node.NODE_NAME + " running..." )
     rospy.spin()
     rospy.loginfo( node.NODE_NAME + " stopped." )
