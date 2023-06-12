@@ -21,17 +21,18 @@ class ArduinoSensorManagerNode():
         self.listen_to_twist = rospy.Subscriber("cmd_vel", Twist, self.read_and_publish_sensors_data)
     
 
-    def read_and_publish_sensors_data(self):
+    def read_and_publish_sensors_data(self,twist_data):
         while not rospy.is_shutdown():
             line = self.ser.readline()
-            if line == "":
+            line = line.decode("utf-8-sig")
+            if line == "" or line == "\n":
                 continue
             try:
-                line = line.decode("utf-8-sig")
                 stripped_decoded_line = line.strip('\n')
-                msg = json.loads(stripped_decoded_line)
-                self.publish_odometry(msg)
-                self.publish_sonar(msg)
+                rospy.loginfo(stripped_decoded_line)
+                #msg = json.loads(stripped_decoded_line)
+                #self.publish_odometry(msg)
+                #self.publish_sonar(msg)
                 break
             except Exception as e:
                 rospy.loginfo("Couldn't deserialize Sensors Message was broken: " + str(stripped_decoded_line) + " Error message was " + str(e))

@@ -2,15 +2,15 @@ import rospy
 from geometry_msgs.msg import Twist
 from triskarino_msgs.msg import Light, Sound
 from evdev import InputDevice
-import time
 
-INPUT_PATH = "/dev/input/event3"
+
+INPUT_PATH = "/dev/input/by-id/usb-Logitech_Wireless_Gamepad_F710_653595B3-event-joystick"
 ANALOG_MAX_VALUE = 32768
 BUTTON_MAX_VALUE = 255
 PUBLISHER_QUEUE_SIZE = 10
 #CUTTING MAXIMUM ANGULAR AND LINEAR VELOCITIES TO HAVE BETTER CONTROL WITH JOYSTICK
 MAX_ANGULAR = 0.2
-MAX_LINEAR = 0.3
+MAX_LINEAR = 0.5
 ROUND_DIGITS_LINEAR = 1
 ROUND_DIGITS_ANGULAR = 2
 #LIGHT CONSTANTS
@@ -18,8 +18,6 @@ WAIT = 10
 COLOR = [255,0,0]
 #SOUND CONSTANTS
 VOLUME=600
-#PROFILING
-TIMESTAMPS = []
 
 class TeleopManagerNode():
     NODE_NAME = "teleop_manager"
@@ -55,7 +53,7 @@ class TeleopManagerNode():
             if event.code == 0:
                 #EVENT CODE 0 is sent after each input, (analogic with both x and y components counts as one input but it is read with two iteration cycles)
                 if publish_twist:
-                    rospy.loginfo(str(twist_msg) + " published at time " + str(time.time()))
+                    rospy.loginfo(str(twist_msg))
                     self.twist_pub.publish(twist_msg)
                     publish_twist = False
                 if publish_light:

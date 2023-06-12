@@ -1,12 +1,8 @@
 import rospy
-from nav_msgs.msg import Odometry
-from triskarino_msgs.msg import Sonar 
-import tf 
 import json 
-from geometry_msgs.msg import Point, Pose, Quaternion, Twist, Vector3
+from geometry_msgs.msg import  Twist
 import serial 
 
-PUBLISHER_QUEUE_SIZE = 100
 
 class ArduinoWheelsManagerNode():
     NODE_NAME = "arduino_wheels_manager"
@@ -17,13 +13,13 @@ class ArduinoWheelsManagerNode():
         self.listen_to_twist = rospy.Subscriber("cmd_vel", Twist, self.move_robot)
     
     def move_robot(self,twist_data):
-        #twist_msg = ":"+str(twist_data.linear.x)+","+str(twist_data.linear.y)+","+str(twist_data.angular.z)
+        #twist_msg = ":"+str(twist_data.linear.x)+","+str(twist_data.linear.y)+","+str(twist_data.angular.z) + "\n"
         #rospy.loginfo("Received Twist message is: " + str(twist_msg))
-        #self.ser.write(bytes((twist_msg+'\n'), encoding='utf-8'))
+        #self.ser.write(bytes((twist_msg), encoding='utf-8'))
         twist_msg = {"twist": [twist_data.linear.x, twist_data.linear.y, twist_data.angular.z]}
         serialized_twist_msg = json.dumps(twist_msg)
         rospy.loginfo("Received Twist message is: " + str(twist_msg))
-        self.ser.write(bytes((serialized_twist_msg+'\n'), encoding='utf-8'))
+        self.ser.write(bytes((serialized_twist_msg), encoding='utf-8'))
 
     
 

@@ -19,6 +19,7 @@ add_message_files(
   Sonar.msg
   Light.msg
   Sound.msg
+  RawOdometry.msg
 )
 
 generate_messages(
