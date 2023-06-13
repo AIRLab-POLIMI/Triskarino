@@ -9,9 +9,9 @@ ANALOG_MAX_VALUE = 32768
 BUTTON_MAX_VALUE = 255
 PUBLISHER_QUEUE_SIZE = 10
 #CUTTING MAXIMUM ANGULAR AND LINEAR VELOCITIES TO HAVE BETTER CONTROL WITH JOYSTICK
-MAX_ANGULAR = 0.2
-MAX_LINEAR = 0.5
-ROUND_DIGITS_LINEAR = 1
+MAX_ANGULAR = 0.8
+MAX_LINEAR = 0.8
+ROUND_DIGITS_LINEAR = 2
 ROUND_DIGITS_ANGULAR = 2
 #LIGHT CONSTANTS
 WAIT = 10
@@ -112,7 +112,7 @@ class TeleopManagerNode():
                 publish_light = True
             elif event.code == 311 and event.value == 1:
                 #RB plays acknowledged sound from r2d2
-                sound_msg.filepath = "Triskarino/triskarino_robot/src/triskarino_hw/resources/acknowledged.wav"
+                sound_msg.filepath = "~/Triskarino/triskarino_robot/src/triskarino_hw/resources/acknowledged.wav"
                 sound_msg.volume = VOLUME
                 publish_sound = True
                 

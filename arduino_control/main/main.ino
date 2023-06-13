@@ -93,13 +93,9 @@ StaticJsonDocument<128> sensor_msg;
 JsonArray sonarData = sensor_msg.createNestedArray("sonarData");
 JsonArray odometryPos = sensor_msg.createNestedArray("odometryPos");
 JsonArray odometryVel = sensor_msg.createNestedArray("odometryVel");
-//Json that will continuosly be updated with the twist messages
-StaticJsonDocument<32> twist_msg;
-JsonArray twistData = twist_msg.createNestedArray("twist");
 
 void setup() {
   initializeSensorMsg();
-  initializeTwistMsg();
   virhas.setKpid(2, 1, 0.7);
   virhas.stop();
   Serial.begin(115200);
@@ -115,11 +111,6 @@ void loop() {
      getSonarData();
      // I have cm[i] filled with information at this point, let's put it in the Json
      fillSonarMsg();
-     fillTwistMsg();
-     speedY = twistData[1];
-     speedX = twistData[0];
-     speedTh = twistData[2];
-     
      //If twist message is equal to the default one, the robot does not move
      if(speedX == 0.0 & speedY == 0.0 & speedTh == 0.0){
        virhas.stop();
@@ -138,35 +129,48 @@ void loop() {
 void recvWithStartEndMarkers() {
     static boolean recvInProgress = false;
     static byte ndx = 0;
-    char startMarker = '{';
-    char endMarker = '}';
+    static byte valueCounter = 0;
+    char startMarker = ':';
+    char separator = ',';
+    char endMarker = '\n';
     char rc;
  
     while (Serial.available() > 0 && newData == false) {
         rc = Serial.read();
 
         if (recvInProgress == true) {
-            if (rc != endMarker) {
+          //Accumulate characters in the buffer till the separator appears
+            if (rc != separator) {
                 receivedChars[ndx] = rc;
                 ndx++;
                 if (ndx >= numChars) {
                     ndx = numChars - 1;
                 }
             }
-            else {
-                receivedChars[ndx] = rc;
-                ndx++;
-                receivedChars[ndx] = '\0'; // terminate the string
-                recvInProgress = false;
-                ndx = 0;
-                newData = true;
+            else if (rc == separator) {
+              //When the separator appears, put the received number in the respective speed by the value counter
+              receivedChars[ndx] = '\0'; // terminate the string
+              recvInProgress = true;
+              ndx = 0;
+              switch (valueCounter){
+                case 0: speedX = atof(receivedChars);
+                        break;
+                case 1: speedY = atof(receivedChars);
+                        break;
+                case 2: speedTh = atof(receivedChars);
+                        break;
+              }
+              valueCounter++;  
+            }
+            else if (rc == endMarker){
+              //When the endMarker appears exit from the loop and the speed variables should be full
+              newData = true;
+              valueCounter = 0;
             }
         }
 
         else if (rc == startMarker) {
             recvInProgress = true;
-            receivedChars[ndx] = rc;
-            ndx++;
         }
     }
 }
@@ -185,19 +189,6 @@ void initializeSensorMsg(){
 }
 
 
-void initializeTwistMsg(){
-  twistData.add(0.0);
-  twistData.add(0.0);
-  twistData.add(0.0);
- 
-}
-
-void resetTwistMsg(){
-  twistData[0] = 0.0;
-  twistData[1] = 0.0;
-  twistData[2] = 0.0;
-}
-
 
 //Uses the contents of the twist message to move the robot
 void moveRobot(){
@@ -206,19 +197,6 @@ void moveRobot(){
   virhas.PIDLoop();
 }
 
-
-
-void fillTwistMsg(){
-    const auto deser_err = deserializeJson(twist_msg, receivedChars);
-    // Test if parsing succeeds.
-    if (deser_err) {
-        Serial.print(F("deserializeJson() failed: "));
-        Serial.print(deser_err.f_str());
-        Serial.print(" ");
-        Serial.println(receivedChars);
-
-     }
-}
 
 
 void fillOdometryMsg(){

@@ -1,4 +1,0 @@
-<launch>
-  
-  <node pkg="triskarino_hw" type="arduino_manager.py" name="arduino_manager" output="screen" />
-</launch>
