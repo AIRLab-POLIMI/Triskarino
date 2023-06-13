@@ -93,16 +93,8 @@ void moveRobot(const geometry_msgs::Twist& twist_msg){
   
 }
 
-<<<<<<< HEAD
-//Json that will continuosly be updated to send odometry and sonar information over Serial
-StaticJsonDocument<128> sensor_msg;
-JsonArray sonarData = sensor_msg.createNestedArray("sonarData");
-JsonArray odometryPos = sensor_msg.createNestedArray("odometryPos");
-JsonArray odometryVel = sensor_msg.createNestedArray("odometryVel");
 
-void setup() {
-  initializeSensorMsg();
-=======
+
 ros::NodeHandle nh;
 triskarino_msgs::RawOdometry odom_msg;
 ros::Publisher odomPub("rawOdometry", &odom_msg);
@@ -111,7 +103,6 @@ ros::Publisher sonarPub("sonar", &sonar_msg);
 ros::Subscriber<geometry_msgs::Twist> twistSub("cmd_vel", &moveRobot );
 
 void setup() {
->>>>>>> refs/remotes/origin/main
   virhas.setKpid(2, 1, 0.7);
   virhas.stop();
   Serial.begin(115200);
@@ -125,102 +116,6 @@ void setup() {
 
 void loop() {
 
-<<<<<<< HEAD
-  recvWithStartEndMarkers();
-
-  if (newData == true){
-     //Reading data from SONAR
-     getSonarData();
-     // I have cm[i] filled with information at this point, let's put it in the Json
-     fillSonarMsg();
-     //If twist message is equal to the default one, the robot does not move
-     if(speedX == 0.0 & speedY == 0.0 & speedTh == 0.0){
-       virhas.stop();
-     }else{
-       moveRobot();
-    }
-
-    fillOdometryMsg();
-    serializeJson(sensor_msg, Serial);
-    Serial.write("\n");
-    newData = false;
-  }
-  
-}
-
-void recvWithStartEndMarkers() {
-    static boolean recvInProgress = false;
-    static byte ndx = 0;
-    static byte valueCounter = 0;
-    char startMarker = ':';
-    char separator = ',';
-    char endMarker = '\n';
-    char rc;
- 
-    while (Serial.available() > 0 && newData == false) {
-        rc = Serial.read();
-
-        if (recvInProgress == true) {
-          //Accumulate characters in the buffer till the separator appears
-            if (rc != separator) {
-                receivedChars[ndx] = rc;
-                ndx++;
-                if (ndx >= numChars) {
-                    ndx = numChars - 1;
-                }
-            }
-            else if (rc == separator) {
-              //When the separator appears, put the received number in the respective speed by the value counter
-              receivedChars[ndx] = '\0'; // terminate the string
-              recvInProgress = true;
-              ndx = 0;
-              switch (valueCounter){
-                case 0: speedX = atof(receivedChars);
-                        break;
-                case 1: speedY = atof(receivedChars);
-                        break;
-                case 2: speedTh = atof(receivedChars);
-                        break;
-              }
-              valueCounter++;  
-            }
-            else if (rc == endMarker){
-              //When the endMarker appears exit from the loop and the speed variables should be full
-              newData = true;
-              valueCounter = 0;
-            }
-        }
-
-        else if (rc == startMarker) {
-            recvInProgress = true;
-        }
-    }
-}
-
-void initializeSensorMsg(){
-  sonarData.add(0.0);
-  sonarData.add(0.0);
-  sonarData.add(0.0);
-  sonarData.add(0.0);
-  odometryPos.add(0.0);
-  odometryPos.add(0.0);
-  odometryPos.add(0.0);
-  odometryVel.add(0.0);
-  odometryVel.add(0.0);
-  odometryVel.add(0.0);
-}
-
-
-
-//Uses the contents of the twist message to move the robot
-void moveRobot(){
- 
-  virhas.run2(speedY * _MAX_SPEED, speedX * _MAX_SPEED, speedTh * _MAX_ANGULAR);
-  virhas.PIDLoop();
-}
-
-
-=======
  nh.spinOnce();
   
 }
@@ -236,8 +131,6 @@ void publishSensorMsg(){
   odomPub.publish(&odom_msg);
 }
 
-
->>>>>>> refs/remotes/origin/main
 
 void fillOdometryMsg(){
   odom_msg.odometryPos[0] = virhas.getPosX();
