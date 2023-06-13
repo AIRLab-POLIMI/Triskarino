@@ -1,12 +1,16 @@
 #include <NewPing.h>
 #include <CytronMotorDriver.h>
 #include <Encoder.h>
-#include <ArduinoJson.h>
 #include <ViRHas.h>
+#include <ros.h>
+#include <triskarino_msgs/RawOdometry.h>
+#include <triskarino_msgs/Sonar.h>
+#include <geometry_msgs/Twist.h>
 // SONARS
 
 #define SONAR_NUM 4 
 #define MAX_DISTANCE 300 // Max distance returned
+
 
 unsigned long pingTimer[SONAR_NUM];
 
@@ -65,16 +69,6 @@ NewPing sonar[SONAR_NUM] = {
 #define _MAX_SPEED 80 //cm/s
 #define _MAX_ANGULAR 6.28//rad/s
 
-//Variables needed to read data reliably
-const byte numChars = 64;
-char receivedChars[numChars];
-boolean newData = false;
-
-//Variables to read speed
-float speedX = 0.0;
-float speedY = 0.0;
-float speedTh = 0.0;
-
 // Configure the motor driver.
 CytronMD motor1(PWM_PWM, _1_1A, _1_1B); // PWM 2A = Pin 8, PWM 2B = Pin 7. Motor 1 : right robot
 CytronMD motor2(PWM_PWM, _2_1A, _2_1B);   // PWM 1A = Pin 12, PWM 1B = Pin 11. Motor 2 : Atras
@@ -87,7 +81,19 @@ Encoder ENCODER[] = { Encoder(_EP11, _EP12), Encoder(_EP21, _EP22), Encoder(_EP3
 //robot class
 ViRHaS virhas = ViRHaS(motor1, motor2, motor3, ENCODER[0], ENCODER[1], ENCODER[2]);
 
+//Uses the contents of the twist message to move the robot
+void moveRobot(const geometry_msgs::Twist& twist_msg){
+  if(twist_msg.linear.x == 0.0 && twist_msg.linear.y == 0.0 && twist_msg.angular.z == 0.0){
+    virhas.stop();
+  }else{
+    virhas.run2(twist_msg.linear.y * _MAX_SPEED, twist_msg.linear.x * _MAX_SPEED, twist_msg.angular.z * _MAX_ANGULAR);
+    virhas.PIDLoop();
+  }
+  publishSensorMsg();
+  
+}
 
+<<<<<<< HEAD
 //Json that will continuosly be updated to send odometry and sonar information over Serial
 StaticJsonDocument<128> sensor_msg;
 JsonArray sonarData = sensor_msg.createNestedArray("sonarData");
@@ -96,14 +102,30 @@ JsonArray odometryVel = sensor_msg.createNestedArray("odometryVel");
 
 void setup() {
   initializeSensorMsg();
+=======
+ros::NodeHandle nh;
+triskarino_msgs::RawOdometry odom_msg;
+ros::Publisher odomPub("rawOdometry", &odom_msg);
+triskarino_msgs::Sonar sonar_msg;
+ros::Publisher sonarPub("sonar", &sonar_msg);
+ros::Subscriber<geometry_msgs::Twist> twistSub("cmd_vel", &moveRobot );
+
+void setup() {
+>>>>>>> refs/remotes/origin/main
   virhas.setKpid(2, 1, 0.7);
   virhas.stop();
   Serial.begin(115200);
+  nh.getHardware()->setBaud(115200);
+  nh.initNode();
+  nh.subscribe(twistSub);
+  nh.advertise(odomPub);
+  nh.advertise(sonarPub);
   
 }
 
 void loop() {
 
+<<<<<<< HEAD
   recvWithStartEndMarkers();
 
   if (newData == true){
@@ -198,19 +220,37 @@ void moveRobot(){
 }
 
 
+=======
+ nh.spinOnce();
+  
+}
+
+
+
+
+void publishSensorMsg(){
+  getSonarData();
+  fillSonarMsg();
+  fillOdometryMsg();
+  sonarPub.publish(&sonar_msg);
+  odomPub.publish(&odom_msg);
+}
+
+
+>>>>>>> refs/remotes/origin/main
 
 void fillOdometryMsg(){
-  odometryPos[0] = virhas.getPosX();
-  odometryPos[1] = virhas.getPosY();
-  odometryPos[2] = virhas.getPosTh();
-  odometryVel[0] = virhas.getSpeedX();
-  odometryVel[1] = virhas.getSpeedY();
-  odometryVel[2] = virhas.getSpeedTh();
+  odom_msg.odometryPos[0] = virhas.getPosX();
+  odom_msg.odometryPos[1] = virhas.getPosY();
+  odom_msg.odometryPos[2] = virhas.getPosTh();
+  odom_msg.odometryVel[0] = virhas.getSpeedX();
+  odom_msg.odometryVel[1] = virhas.getSpeedY();
+  odom_msg.odometryVel[2] = virhas.getSpeedTh();
 }
 
 void fillSonarMsg(){
  for(uint8_t i = 0; i < SONAR_NUM; i++){
-  sonarData[i]=cm[i];
+  sonar_msg.distances[i]=cm[i];
  }
 }
 
