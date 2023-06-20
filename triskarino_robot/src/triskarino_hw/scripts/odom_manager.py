@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import rospy
 from nav_msgs.msg import Odometry
 from triskarino_msgs.msg import Sonar,RawOdometry

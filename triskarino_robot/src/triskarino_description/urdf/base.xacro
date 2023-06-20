@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+
+<xacro:macro name="base" params="xyz scale rpy">
+    <link name="base_link">
+    <inertial>
+		<mass value="0.07862944645"/>
+		<inertia
+			ixx="0.00002035985530754"
+			ixy="0"
+			ixz="0"
+			iyy="0.00002035985530754"
+			iyz="0"
+			izz="0.00003945961663220"/>
+		</inertial>
+	<visual>
+		<geometry>
+			<mesh scale="${scale}" filename="package://triskarino_description/meshes/base_v2.stl"/>
+
+		</geometry>
+		<material name="base_material">
+			<color rgba="1 1 1 1"/>
+		</material>
+	</visual>
+	<collision>
+		<geometry>
+			<mesh scale="${scale}" filename="package://triskarino_description/meshes/base.stl"/>
+		</geometry>
+	</collision>
+
+	</link>
+	<joint name="base_joint" type="fixed">
+		<parent link="origin_link" />
+		<child link="base_link" />
+		<origin xyz="${xyz}"  rpy="${rpy}"/>
+	</joint>
+
+</xacro:macro>
+
+    
+</robot>

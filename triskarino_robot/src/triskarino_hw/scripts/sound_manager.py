@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import rospy
 from triskarino_msgs.msg import Sound
 from subprocess import run 
@@ -10,8 +11,13 @@ class SoundManagerNode():
         self.sound_subscriber = rospy.Subscriber("sound", Sound, self.play_sound)
     
     def play_sound(self,sound_data):
-        command_string = "play -v " + str(sound_data.volume) + " " + str(sound_data.filepath) + " &"
-        run(command_string,shell = False)
+        rospy.loginfo(run("pwd",shell = False, capture_output= True))
+        rospy.loginfo(run("ls",shell = False, capture_output= True))
+
+        #-t alsa is there only to stop a warning, volume has to be a real number (1 is actual default volume)
+        command_string = "play -v " + str(sound_data.volume) + " " + str(sound_data.filepath) + " -t alsa"
+        rospy.loginfo("Executing Command " + command_string)
+        run(command_string,shell = True)
         
         
 

@@ -1,53 +1,63 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="open_base">
 
-    <xacro:include filename="triskarino_plate.xacro" />
-    <xacro:include filename="triskarino_motor.xacro" />
-    <xacro:include filename="triskarino_wheel.xacro" />
-    <xacro:include filename="triskarino_cover.xacro" />
-    <xacro:include filename="triskarino_top.xacro" />
-
-
-    <material name="blue">
-        <color rgba="0.2 0.2 1 1"/>
-    </material>
-    <!-- BASE LINK -->
-
-    <link name="base_link">
-
-    </link>
-
-
-    <!-- BOTTOM PLATE-->
-
-    <xacro:plate name="bottom" xyz="0 0 -0.01875" rpy="0 0 0" scale="0.75 0.75 0.75" color="blue"/>
-
-    <!-- TOP PLATE-->
-
-    <xacro:plate name="top" xyz="0 0 0.0375" rpy="0 0 0" scale="0.75 0.75 0.75" color="blue"/>
-
-    <!-- LEFT MOTOR-->
-
-    <xacro:motor name="left" xyz="-0.0605 0.03495 0.0" rpy_joint="0 0 1.6" rpy_link="0 0 ${5*pi/6}" box_size="0.06 0.04 0.0375" color = "blue" parent="base_link"/>
-
-    <!-- RIGHT MOTOR-->
-
-    <xacro:motor name="right" xyz="0.0605 0.03495 0.0" rpy_joint="0 0 1.6" rpy_link="0 0 ${pi/6}" box_size="0.06 0.04 0.0375" color = "blue" parent="base_link"/>
-
-    <!-- LEFT WHEEL -->
-
-    <xacro:wheel name="left" parent="left_motor_link" color="blue" xyz="-0.11898 0.068695 0" rpy="-${pi/2} 0 ${pi/3}" radius="0.0375" length="0.01875" mass="0.1"/>
-
-    <!-- RIGHT WHEEL -->
-
-    <xacro:wheel name="right" parent="right_motor_link" color="blue" xyz="0.11898 0.068695 0" rpy="-${pi/2} 0 ${-pi/3}" radius="0.0375" length="0.01875" mass="0.1"/>
+	<xacro:include filename="$(find triskarino_description)/urdf/rim.urdf.xacro"/>
+	<xacro:include filename="$(find triskarino_description)/urdf/triskarino_cover.xacro"/>
+    <xacro:include filename="$(find triskarino_description)/urdf/base.xacro"/>
+    <link name="origin_link"/>
+	
     
-     <!-- COVER -->
+    <xacro:base 
+        xyz="0 0 0.01905"
+        scale="1 1 1"
+        rpy="0 1 0"
+        />
 
-    <xacro:cover xyz="0 0 -0.01" parent="base_link" rpy="0 0 0" scale="0.030 0.030 0.005" color="blue"/>
 
-    <!-- TOP -->
+	<xacro:rim_macro
+		name="left"
+		color="0.3 0 0"
+		xyz="-0.03464101615 0.02 0"
+		rpy="1.570796326794896 0 1.047197551196597"/>
+	<xacro:rim_macro
+		name="back"
+		color="0 0.3 0"
+		xyz="0 -0.04 0"
+		rpy="1.570796326794896 0 3.141592653589793"/>
+	<xacro:rim_macro
+		name="right"
+		color="0 0 0.3"
+		xyz="0.03464101615 0.02 0"
+		rpy="1.570796326794896 0 -1.047197551196597"/>
 
-    <xacro:top xyz="0 0 0.21" parent="cover_link" rpy="0 0 0" color="blue" radius="0.2" length="0.3" mass="0.5"/>
+    <xacro:cover 
+        xyz="0 0 0"
+        rpy ="0 0 0"
+        scale="0.01 0.01 0.001"
+        color="base_material"
+        parent="base_link"
+    />
 
+
+	<gazebo reference="base_link">
+    		<material>Gazebo/White</material>
+  	</gazebo>
+
+	<gazebo reference="rim_left_link">
+    		<material>Gazebo/Red</material>
+  	</gazebo>
+
+	<gazebo reference="rim_back_link">
+    		<material>Gazebo/Green</material>
+  	</gazebo>
+
+	<gazebo reference="rim_right_link">
+    		<material>Gazebo/Blue</material>
+  	</gazebo>
+	<gazebo>
+		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+		<robotNamespace>/open_base</robotNamespace>
+		</plugin>
+	</gazebo>
+	
 </robot>

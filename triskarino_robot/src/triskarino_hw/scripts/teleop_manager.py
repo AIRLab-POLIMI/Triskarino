@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import rospy
 from geometry_msgs.msg import Twist
 from triskarino_msgs.msg import Light, Sound
@@ -17,7 +18,7 @@ ROUND_DIGITS_ANGULAR = 2
 WAIT = 10
 COLOR = [255,0,0]
 #SOUND CONSTANTS
-VOLUME=600
+VOLUME=0.5
 
 class TeleopManagerNode():
     NODE_NAME = "teleop_manager"
@@ -112,7 +113,7 @@ class TeleopManagerNode():
                 publish_light = True
             elif event.code == 311 and event.value == 1:
                 #RB plays acknowledged sound from r2d2
-                sound_msg.filepath = "~/Triskarino/triskarino_robot/src/triskarino_hw/resources/acknowledged.wav"
+                sound_msg.filepath = "Triskarino/triskarino_robot/src/triskarino_hw/resources/acknowledged.wav"
                 sound_msg.volume = VOLUME
                 publish_sound = True
                 

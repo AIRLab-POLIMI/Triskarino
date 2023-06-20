@@ -1,4 +1,4 @@
 #Filepath identifies the path of the sound to play, volume is the volume inserted to play the sound
 string filepath
-int32 volume
+float32 volume
 
