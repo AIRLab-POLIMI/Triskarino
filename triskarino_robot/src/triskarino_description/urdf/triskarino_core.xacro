@@ -2,42 +2,69 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="open_base">
 
 	<xacro:include filename="$(find triskarino_description)/urdf/rim.urdf.xacro"/>
-	<xacro:include filename="$(find triskarino_description)/urdf/triskarino_cover.xacro"/>
     <xacro:include filename="$(find triskarino_description)/urdf/base.xacro"/>
+    <xacro:include filename="$(find triskarino_description)/urdf/triskarino_top.xacro"/>
+    <xacro:include filename="$(find triskarino_description)/urdf/materials.xacro"/>
+
     <link name="origin_link"/>
 	
-    
+    <!-- BASE PLATE -->
     <xacro:base 
         xyz="0 0 0.01905"
         scale="1 1 1"
-        rpy="0 1 0"
+        rpy="0 3.14 -0.05"
         />
 
-
+    <!-- LEFT WHEEL -->
 	<xacro:rim_macro
 		name="left"
 		color="0.3 0 0"
-		xyz="-0.03464101615 0.02 0"
-		rpy="1.570796326794896 0 1.047197551196597"/>
+		xyz="-0.1299038106 0.075 -0.02"
+		rpy="1.570796326794896 0 1.047197551196597"
+        scale_factor="2.0"/>
+
+    <!-- BACK WHEEL -->
 	<xacro:rim_macro
 		name="back"
 		color="0 0.3 0"
-		xyz="0 -0.04 0"
-		rpy="1.570796326794896 0 3.141592653589793"/>
+		xyz="0 -0.15 -0.02"
+		rpy="1.570796326794896 0 3.141592653589793"
+        scale_factor="2.0"/>
+    
+    <!-- RIGHT WHEEL -->
 	<xacro:rim_macro
 		name="right"
 		color="0 0 0.3"
-		xyz="0.03464101615 0.02 0"
-		rpy="1.570796326794896 0 -1.047197551196597"/>
-
-    <xacro:cover 
-        xyz="0 0 0"
-        rpy ="0 0 0"
-        scale="0.01 0.01 0.001"
-        color="base_material"
+		xyz="0.1299038106 0.075 -0.02"
+		rpy="1.570796326794896 0 -1.047197551196597"
+        scale_factor="2.0"/>
+    
+    <!-- FIRST CYLINDER SET AT THE BASE OF THE LIDAR -->
+    <xacro:top 
+        name="layer_0"
+        xyz="0 0 0.03"
+        rpy="0 0 0"
         parent="base_link"
-    />
+        color="grey"
+        radius="0.2"
+        length="0.01"
+        mass="0.001"
+        />
+    
+    <!-- LIDAR -->
+    <xacro:include filename="lidar.xacro" />
 
+    <!-- SECOND CYLINDER MAKING UP THE TOP OF THE ROBOT -->
+    <xacro:top 
+        name="layer_1"
+        xyz="0 0 0.31"
+        rpy="0 0 0"
+        parent="base_link"
+        color="blue"
+        radius="0.2"
+        length="0.4"
+        mass="0.01"
+        />
 
 	<gazebo reference="base_link">
     		<material>Gazebo/White</material>

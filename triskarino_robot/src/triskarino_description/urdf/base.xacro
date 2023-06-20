@@ -22,18 +22,20 @@
 		<material name="base_material">
 			<color rgba="1 1 1 1"/>
 		</material>
+        <origin rpy="${rpy}"/>
 	</visual>
 	<collision>
 		<geometry>
-			<mesh scale="${scale}" filename="package://triskarino_description/meshes/base.stl"/>
+			<mesh scale="${scale}" filename="package://triskarino_description/meshes/base_v2.stl"/>
 		</geometry>
+         <origin rpy="${rpy}"/>
 	</collision>
 
 	</link>
 	<joint name="base_joint" type="fixed">
 		<parent link="origin_link" />
 		<child link="base_link" />
-		<origin xyz="${xyz}"  rpy="${rpy}"/>
+		<origin xyz="${xyz}"  rpy="0 0 0"/>
 	</joint>
 
 </xacro:macro>

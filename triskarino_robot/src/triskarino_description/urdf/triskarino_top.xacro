@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
+<xacro:include filename="$(find triskarino_description)/urdf/inertial_macros.xacro"/>
 
-<xacro:macro name="top" params="xyz rpy parent color radius length mass">
+<xacro:macro name="top" params="xyz name rpy parent color radius length mass">
   
-    <joint name="top_joint" type="fixed">
+    <joint name="${name}_joint" type="fixed">
         <parent link="${parent}"/>
-        <child link="top_link"/>
+        <child link="${name}_link"/>
         <origin xyz="${xyz}" rpy="${rpy}" />
     </joint>
 
-    <link name="top_link">
+    <link name="${name}_link">
         <visual>
             <geometry>
                 <cylinder radius="${radius}" length="${length}"/>
