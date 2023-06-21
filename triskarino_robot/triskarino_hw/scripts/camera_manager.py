@@ -1,45 +1,44 @@
 #!/usr/bin/env python3
 import rospy
-from triskarino_msgs.msg import Light
-import json 
-import serial 
+import cv2
+from sensor_msgs.msg import Image 
+from cv_bridge import CvBridge
 
-
-class LightsManagerNode():
-    NODE_NAME = "lights_manager"
-    def __init__(self,port='/dev/ttyUSB0', baud_rate=115200, timeout=1):
-        self.ser = serial.Serial(port, baud_rate, timeout=timeout)
-        self.ser.flush()
-        rospy.init_node("lights_manager")
-        self.light_subscriber = rospy.Subscriber("light", Light, self.activate_lights)
-    
-    def _log_board_output(self):
+#dispW is the width of the published image, dispH is the height of the published image, rate is the rate of publishing in hz
+flip=2
+dispW=320
+dispH=240
+RATE=5
+#Gstreaming camera settings, do not change!
+CAM_SET = 'nvarguscamerasrc !  video/x-raw(memory:NVMM), width=3264, height=2464, format=NV12, framerate=21/1 ! nvvidconv flip-method='+str(flip)+' ! video/x-raw, width='+str(dispW)+', height='+str(dispH)+', format=BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink'
+class CameraManagerNode():
+    NODE_NAME = "camera_manager"
+    def __init__(self,cam_set=CAM_SET):
+        rospy.init_node("camera_manager")
+        self.cam= cv2.VideoCapture(cam_set)
+        if not self.cam.isOpened():
+            rospy.logwarn("CAM NOT OPEN")
+        self.bridge = CvBridge()
+        self.image_publisher = rospy.Publisher('/rpi_camera',Image, queue_size=10)
+        self.capture()
+   
+    def capture(self):
+        rospy.loginfo("Capturing images...")
+        rate = rospy.Rate(RATE)
         while not rospy.is_shutdown():
-            rospy.loginfo("Reading Serial")
-            line = self.ser.readline()
-            if line == "":
-                continue
-            line = line.decode("utf-8-sig")
-            stripped_decoded_line = line.strip('\n')
-            rospy.loginfo(stripped_decoded_line)
-            break
-
-    def activate_lights(self,lights_data):
-
-        light_msg = {
-            "color": [lights_data.color[0], lights_data.color[1], lights_data.color[2]],
-            "action": lights_data.action,
-            "wait": lights_data.delay
-        }
-        serialized_light_msg = json.dumps(light_msg)
-        rospy.loginfo("Received Light message is: " + str(light_msg))
-        self.ser.write(bytes((serialized_light_msg+'\n'), encoding='utf-8'))
-        self._log_board_output()
-        
+            ret, frame = self.cam.read()
+            if ret == True:
+                msg= self.bridge.cv2_to_imgmsg(frame,"bgr8")
+                self.image_publisher.publish(msg)
+            else:
+                rospy.logwarn("Image not published, RET was false")
+            rate.sleep()
+        self.cam.release()
+        cv2.destroyAllWindows()
    
 if __name__ == '__main__':
     rospy.loginfo("AO")
-    node = LightsManagerNode()
+    node = CameraManagerNode()
     rospy.loginfo( node.NODE_NAME + " running..." )
     rospy.spin()
     rospy.loginfo( node.NODE_NAME + " stopped." )
