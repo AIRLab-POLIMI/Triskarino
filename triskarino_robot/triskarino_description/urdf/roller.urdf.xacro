@@ -6,7 +6,7 @@
 	name="roller_macro"
 	params="parent name xyz rpy scale_factor">
 
-		<link name="roller_${name}_rim_${parent}_link">
+		<link name="roller_${name}_${parent}_link">
 			<inertial>
 				<mass value="${0.00113845 * scale_factor * scale_factor * scale_factor}"/>
 				<inertia
@@ -31,12 +31,12 @@
 				</geometry>
 			</collision>
 		</link>
-	<gazebo reference="roller_${name}_rim_${parent}_link">
+	<gazebo reference="roller_${name}_{parent}">
     		<material>Gazebo/Black</material>
   	</gazebo>
-		<joint name="roller_${name}_rim_${parent}_joint" type="continuous">
-			<parent link="rim_${parent}_link"/>
-			<child link="roller_${name}_rim_${parent}_link"/>
+		<joint name="roller_${name}_${parent}_joint" type="continuous">
+			<parent link="${parent}"/>
+			<child link="roller_${name}_${parent}_link"/>
 			<axis xyz="0 0 1"/>
 			<origin xyz="${xyz}" rpy="${rpy}"/>
 

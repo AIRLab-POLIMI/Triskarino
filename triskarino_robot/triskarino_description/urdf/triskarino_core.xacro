@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="open_base">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="triskarino">
 
 	<xacro:include filename="$(find triskarino_description)/urdf/rim.urdf.xacro"/>
     <xacro:include filename="$(find triskarino_description)/urdf/base.xacro"/>
     <xacro:include filename="$(find triskarino_description)/urdf/triskarino_top.xacro"/>
     <xacro:include filename="$(find triskarino_description)/urdf/materials.xacro"/>
-
+    <xacro:include filename="$(find triskarino_description)/urdf/hokuyo.xacro"/>
     <link name="origin_link"/>
 	
     <!-- BASE PLATE -->
@@ -51,8 +51,13 @@
         mass="0.001"
         />
     
-    <!-- LIDAR -->
-    <xacro:include filename="lidar.xacro" />
+    <xacro:hokuyo_ust10_mount 
+        topic="scan"
+        parent_link="layer_0_link"
+        xyz="0 0.11 0"
+        rpy="0 0 1.5708"
+    />
+
 
     <!-- SECOND CYLINDER MAKING UP THE TOP OF THE ROBOT -->
     <xacro:top 
@@ -83,7 +88,7 @@
   	</gazebo>
 	<gazebo>
 		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-		<robotNamespace>/open_base</robotNamespace>
+		<robotNamespace>/triskarino</robotNamespace>
 		</plugin>
 	</gazebo>
 	

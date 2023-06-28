@@ -47,9 +47,9 @@ if __name__=="__main__":
     settings = termios.tcgetattr(sys.stdin)
 
     rospy.init_node('vel_Publisher')
-    pub = rospy.Publisher('/open_base/back_joint_velocity_controller/command', Float64, queue_size=1)
-    pub1 = rospy.Publisher('/open_base/left_joint_velocity_controller/command', Float64, queue_size=1)
-    pub2 = rospy.Publisher('/open_base/right_joint_velocity_controller/command', Float64, queue_size=1)
+    pub = rospy.Publisher('/triskarino/back_joint_velocity_controller/command', Float64, queue_size=10)
+    pub1 = rospy.Publisher('/triskarino/left_joint_velocity_controller/command', Float64, queue_size=10)
+    pub2 = rospy.Publisher('/triskarino/right_joint_velocity_controller/command', Float64, queue_size=10)
 
     x = 0
     y = 0
@@ -59,13 +59,15 @@ if __name__=="__main__":
 	
     while(1):  
         key = getKey()       
+        print("Received Key " + str(key))
         if key in moveBindings.keys():
+            print("Changing move bindigs")
             x = moveBindings[key][0]
             y = moveBindings[key][1]
             z = moveBindings[key][2]
 
         elif key in speedBindings.keys():
-            speed += speedBindings[key][0]
+            speed += speedBindings[key]
             print(speed)
         else:
             x = 0

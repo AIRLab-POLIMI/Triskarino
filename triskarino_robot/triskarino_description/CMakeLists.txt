@@ -9,9 +9,10 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   rviz
   urdf
+  gazebo
 )
 
-catkin_install_python(PROGRAMS ./scripts/odom_manager.py ./scripts/camera_manager.py ./scripts/teleop_manager.py ./scripts/lights_manager.py ./scripts/sound_manager.py
+catkin_install_python(PROGRAMS ./src/teleop_omni3.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

@@ -7,6 +7,14 @@
 	name="rim_macro"
 	params="name color xyz rpy scale_factor">
 
+		<joint name="rim_${name}_joint" type="continuous">
+			<parent link="base_link" />
+			<child link="rim_${name}_link"/>
+			<axis xyz="0 0 1"/>
+			<origin xyz="${xyz}" rpy="${rpy}"/>
+
+		</joint>
+
 		<link name="rim_${name}_link">
 			<inertial>
 				<origin xyz="0 0 -0.000343"/>
@@ -37,67 +45,58 @@
 			
 		</link>
 
-		<joint
-			name="rim_${name}_joint"
-			type="continuous">
-
-			<parent link="base_link" />
-			<child link="rim_${name}_link" />
-			<axis xyz="0 0 1"/>
-			<origin xyz="${xyz}" rpy="${rpy}"/>
-
-		</joint>
+		
 		<xacro:roller_macro
-			parent="${name}"
+			parent="rim_${name}_link"
 			name="e"
 			xyz="0.01355 0 0.0055"
 			rpy="-1.570796326794896 0 0"
             scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
-			parent="${name}"
+			parent="rim_${name}_link"
 			name="ne"
 			xyz="0.00958129689 0.00958129689 -0.0055"
 			rpy="-1.570796326794896 0 0.7853981633974483"
             scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
-			parent="${name}"
+			parent="rim_${name}_link"
 			name="n"
 			xyz="0 0.01355 0.0055"
 			rpy="-1.570796326794896 0 1.570796326794896"
             scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
-			parent="${name}"
+			parent="rim_${name}_link"
 			name="nw"
 			xyz="-0.00958129689 0.00958129689 -0.0055"
 			rpy="-1.570796326794896 0 2.356194490192345"
             scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
-			parent="${name}"
+			parent="rim_${name}_link"
 			name="w"
 			xyz="-0.01355 0 0.0055"
 			rpy="-1.570796326794896 0 3.141592653589793"
             scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
-			parent="${name}"
+			parent="rim_${name}_link"
 			name="sw"
 			xyz="-0.00958129689 -0.00958129689 -0.0055"
 			rpy="-1.570796326794896 0 -2.356194490192345"
             scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
-			parent="${name}"
+			parent="rim_${name}_link"
 			name="s"
 			xyz="0 -0.01355 0.0055"
 			rpy="-1.570796326794896 0 -1.570796326794896"
             scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
-			parent="${name}"
+			parent="rim_${name}_link"
 			name="se"
 			xyz="0.00958129689 -0.00958129689 -0.0055"
 			rpy="-1.570796326794896 0 -0.7853981633974483"

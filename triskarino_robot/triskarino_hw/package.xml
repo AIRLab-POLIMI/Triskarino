@@ -27,6 +27,10 @@
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>triskarino_msgs</exec_depend>
   <exec_depend>rosserial_python</exec_depend>
+  <exec_depend>urg_node</exec_depend>
+  <exec_depend>laser_filters</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

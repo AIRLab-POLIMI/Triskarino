@@ -1,5 +1,5 @@
 <launch>
-  
+
   <node pkg="triskarino_hw" type="teleop_manager.py" name="teleop_manager" output="screen" />
   <node pkg="triskarino_hw" type="lights_manager.py" name="lights_manager" output="screen" />
   <node pkg="triskarino_hw" type="sound_manager.py" name="sound_manager" output="screen" />
