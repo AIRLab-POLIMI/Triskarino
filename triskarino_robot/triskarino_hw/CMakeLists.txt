@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
     triskarino_msgs
     cv_bridge
     sensor_msgs
-    urg_node
     rosserial_python
     laser_filters
 )
