@@ -6,6 +6,7 @@
 #include <triskarino_msgs/RawOdometry.h>
 #include <triskarino_msgs/Sonar.h>
 #include <geometry_msgs/Twist.h>
+#include <std_msgs/String.msg>
 // SONARS
 
 #define SONAR_NUM 4 
@@ -87,7 +88,9 @@ void moveRobot(const geometry_msgs::Twist& twist_msg){
     virhas.stop();
   }else{
     virhas.run2(twist_msg.linear.y * _MAX_SPEED, twist_msg.linear.x * _MAX_SPEED, twist_msg.angular.z * _MAX_ANGULAR);
-    virhas.PIDLoop();
+    virhas.PIDLoop(&debug_msg_static);
+    debug_msg.data = debug_msg_static;
+
   }
   publishSensorMsg();
   
@@ -101,16 +104,20 @@ ros::Publisher odomPub("rawOdometry", &odom_msg);
 triskarino_msgs::Sonar sonar_msg;
 ros::Publisher sonarPub("sonar", &sonar_msg);
 ros::Subscriber<geometry_msgs::Twist> twistSub("cmd_vel", &moveRobot );
+std_msgs::String debug_msg;
+ros::Publisher debugPub("arduinoDebug", &debug_msg);
+char[200] debug_msg_static;
 
 void setup() {
   virhas.setKpid(2, 1, 0.7);
   virhas.stop();
-  Serial.begin(115200);
-  nh.getHardware()->setBaud(115200);
+  Serial.begin(250000);
+  nh.getHardware()->setBaud(250000);
   nh.initNode();
   nh.subscribe(twistSub);
   nh.advertise(odomPub);
   nh.advertise(sonarPub);
+  nh.advertise(debugPub);
   
 }
 
@@ -129,6 +136,8 @@ void publishSensorMsg(){
   fillOdometryMsg();
   sonarPub.publish(&sonar_msg);
   odomPub.publish(&odom_msg);
+  debug_msg.publish(&debug_msg);
+  debug_msg_static[0] = '\0';
 }
 
 
@@ -139,6 +148,7 @@ void fillOdometryMsg(){
   odom_msg.odometryVel[0] = virhas.getSpeedX();
   odom_msg.odometryVel[1] = virhas.getSpeedY();
   odom_msg.odometryVel[2] = virhas.getSpeedTh();
+
 }
 
 void fillSonarMsg(){

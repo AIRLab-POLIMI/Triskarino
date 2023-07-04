@@ -6,6 +6,7 @@
     <xacro:include filename="$(find triskarino_description)/urdf/triskarino_top.xacro"/>
     <xacro:include filename="$(find triskarino_description)/urdf/materials.xacro"/>
     <xacro:include filename="$(find triskarino_description)/urdf/hokuyo.xacro"/>
+    
     <link name="origin_link"/>
 	
     <!-- BASE PLATE -->

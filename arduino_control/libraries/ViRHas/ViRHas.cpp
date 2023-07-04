@@ -58,7 +58,7 @@ ViRHaS::ViRHaS(CytronMD & m1, CytronMD & m2,CytronMD & m3, Encoder & e1, Encoder
   
 }
 
-void ViRHaS::PIDLoop(){
+void ViRHaS::PIDLoop(char* debug_msg_static){
   deltaPid=millis()-lastMilliLoop;
   if(deltaPid >= LOOPTIME)   {// enter tmed loop
      lastMilliLoop=millis();
@@ -85,9 +85,11 @@ void ViRHaS::PIDLoop(){
      _m1.setSpeed(PWM_val[0]);
      _m2.setSpeed(PWM_val[1]);
      _m3.setSpeed(PWM_val[2]);
-
+     
      direct_kinematics();
      makeOdometry(deltaPid);
+     //After Make Odometry, posx,posy, posTh, speedX,speedY,speedTh are:
+     snprintf(debug_msg_static, 200, "(%f,%f,%f),(%f,%f,%f)",posX,posY,posTh,speedX,speedY,speedTh)
 
   }
 
@@ -141,9 +143,10 @@ void ViRHaS::stop(void){
     speed_req[i]=0;
     Iterm[i]=0;
   }
-  posX=0;
-  posY=0;
-  posTh=0;
+  //Commenting out this to avoid resetting position every time it stops
+  //posX=0;
+  //posY=0;
+  //posTh=0;
 }
 
 void ViRHaS::stop2(){
@@ -182,15 +185,16 @@ void ViRHaS::direct_kinematics(void){
 }
 
 void ViRHaS::makeOdometry(unsigned long int deltaT){
-   double delta_x = (speedX * cos(posTh) - speedY * sin(posTh)) * deltaT/1000.0;
-     double delta_y = (speedX * sin(posTh) + speedY * cos(posTh)) * deltaT/1000.0;
-     double delta_th = speedTh * deltaT/1000.0;
+  double delta_x = (speedX * cos(posTh) - speedY * sin(posTh)) * deltaT/1000.0;
+  double delta_y = (speedX * sin(posTh) + speedY * cos(posTh)) * deltaT/1000.0;
+  double delta_th = speedTh * deltaT/1000.0;
 
   posX+=delta_x;
   posY+=delta_y;
   posTh+=delta_th;
 
 }
+
 
 int ViRHaS::updatePid(double targetValue, double currentValue, int i)   {// compute PWM value
   double pidTerm =0;                                                            // PID correction

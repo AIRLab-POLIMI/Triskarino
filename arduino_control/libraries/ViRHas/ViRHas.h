@@ -76,7 +76,7 @@ public:
   void setM2Speed(float m2);
   void setM3Speed(float m3);
 
-  void PIDLoop();
+  void PIDLoop(char* debug_msg_static);
 
   double getSpeedX();
   double getSpeedY();
