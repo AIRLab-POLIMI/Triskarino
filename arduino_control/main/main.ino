@@ -105,8 +105,8 @@ ros::Subscriber<geometry_msgs::Twist> twistSub("cmd_vel", &moveRobot );
 void setup() {
   virhas.setKpid(2, 1, 0.7);
   virhas.stop();
-  Serial.begin(115200);
-  nh.getHardware()->setBaud(115200);
+  Serial.begin(250000);
+  nh.getHardware()->setBaud(250000);
   nh.initNode();
   nh.subscribe(twistSub);
   nh.advertise(odomPub);
