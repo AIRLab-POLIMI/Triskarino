@@ -115,8 +115,8 @@ ros::Subscriber<geometry_msgs::Twist> twistSub("cmd_vel", &moveRobot );
 
 
 void setup() {
-  virhas.setKpid_th(3.5,1.25,0);
-  virhas.setKpid_xy(5,0.5,0);
+  virhas.setKpid_th(5,1.25,0.7);
+  virhas.setKpid_xy(5,4,0.7);
   virhas.setWheelRadius(wheel_radius);
   virhas.setEncoderPPR(encoder_ppr);
   virhas.setRobotRadius(robot_radius);

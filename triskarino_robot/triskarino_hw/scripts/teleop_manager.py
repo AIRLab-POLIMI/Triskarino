@@ -10,8 +10,8 @@ ANALOG_MAX_VALUE = 32768
 BUTTON_MAX_VALUE = 255
 PUBLISHER_QUEUE_SIZE = 10
 #CUTTING MAXIMUM ANGULAR AND LINEAR VELOCITIES TO HAVE BETTER CONTROL WITH JOYSTICK
-MAX_ANGULAR = 0.8
-MAX_LINEAR = 0.8
+MAX_ANGULAR = 1.0
+MAX_LINEAR = 1.0
 ROUND_DIGITS_LINEAR = 2
 ROUND_DIGITS_ANGULAR = 2
 #LIGHT CONSTANTS
@@ -51,6 +51,8 @@ class TeleopManagerNode():
             #Button X is 307 values 1 or 0
             #Button Y is 308 values 1 or 0
             #print("Event Code is " + str(event.code) + " Event Value is " + str(event.value))
+            #UP/DOWN ARROWS are code 17 and respectively values -1 and 1 
+            #RIGHT/LEFT ARROWS are code 16 and respectively values 1 and -1 
             if event.code == 0:
                 #EVENT CODE 0 is sent after each input, (analogic with both x and y components counts as one input but it is read with two iteration cycles)
                 if publish_twist:
@@ -65,12 +67,20 @@ class TeleopManagerNode():
                     print(sound_msg)
                     self.sound_pub.publish(sound_msg)
                     publish_sound = False
+            elif event.code == 17:
+                #UP/DOWN arrow, controls robot forward and backwards movement
+                twist_msg.linear.x = -0.5 * event.value
+                publish_twist = True
+            elif event.code == 16:
+                #RIGHT/LEFT arrow, controls robot right and left
+                twist_msg.linear.y = -0.5 * event.value
+                publish_twist = True
             elif event.code == 4:
                 #UP/DOWN analogic, controls robot forward and backwards movement
                 twist_msg.linear.x = - round((event.value / ANALOG_MAX_VALUE) * MAX_LINEAR,ROUND_DIGITS_LINEAR)
                 publish_twist = True
             elif event.code == 3: 
-                #RIGHT/LEFT analogic, controls robot forward and backwards movement
+                #RIGHT/LEFT analogic, controls robot right and left
                 twist_msg.linear.y = - round((event.value / ANALOG_MAX_VALUE) * MAX_LINEAR,ROUND_DIGITS_LINEAR)
                 publish_twist = True
             elif event.code == 2:

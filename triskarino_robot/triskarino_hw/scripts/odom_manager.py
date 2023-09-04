@@ -47,7 +47,6 @@ class OdometryManagerNode():
 
         # publish the message
         self.odom_pub.publish(odom)
-        rospy.loginfo("Publsihing odometry: " + str(odom))
 
 if __name__ == '__main__':
     print("AO")

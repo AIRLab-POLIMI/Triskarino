@@ -70,7 +70,7 @@ private:
   
   
   void getMotorCmS(long deltaT,int pos,int i);
-  void getMotorAngularSpeed(long deltaT,int pos,int i); 
+  
   int updatePid(double targetValue, double currentValue, int i);
   void direct_kinematics(void);
   void makeOdometry(unsigned long int deltaT);
@@ -81,7 +81,7 @@ public:
       Encoder & e1, Encoder & e2, Encoder & e3);
   void run2(float strafe, float forward, float angular);
   void inverseKinematics(float strafeError, float forwardError, float angularError);
-  
+ 
   void PIDLoop(char* debug_msg_static);
 
   double getSpeedX();

@@ -74,17 +74,17 @@ void ViRHaS::PIDLoop(char* debug_msg_static){
      long ActualPos[3];
      ActualPos[0]=_e1.read();
      deltaT=millis()-lastMillis[0];
-     getMotorAngularSpeed(deltaT,ActualPos[0],0);// calculate speed
+     getMotorCmS(deltaT,ActualPos[0],0);// calculate speed
      lastMillis[0] = millis();
 
      ActualPos[1]=_e2.read();
      deltaT=millis()-lastMillis[1];
-     getMotorAngularSpeed(deltaT,ActualPos[1],1);
+     getMotorCmS(deltaT,ActualPos[1],1);
      lastMillis[1] = millis();
 
      ActualPos[2]=_e3.read();
      deltaT=millis()-lastMillis[2];
-     getMotorAngularSpeed(deltaT,ActualPos[2],2);
+     getMotorCmS(deltaT,ActualPos[2],2);
      lastMillis[2] = millis();                                       // calculate speed,
      //Calculates twist (speedX,Y,Th) from actual wheel speed
      direct_kinematics();
@@ -131,9 +131,10 @@ void ViRHaS::run2(float strafe, float forward, float angular) {
 }
 
 void ViRHaS::inverseKinematics(float strafeError, float forwardError, float angularError) {
-  speed_wheel[0] = (+robot_radius * angularError +0.5f*strafeError - 0.866025404f*forwardError)/wheel_radius;
-  speed_wheel[1] = (+robot_radius * angularError - strafeError)/wheel_radius;
-  speed_wheel[2] = (+robot_radius * angularError +0.5f*strafeError + 0.866025404f*forwardError)/wheel_radius;
+
+  speed_wheel[0] = (-robot_radius * angularError + strafeError)/wheel_radius;
+  speed_wheel[1] = (-robot_radius * angularError -0.5f*strafeError - 0.866025404f*forwardError)/wheel_radius;
+  speed_wheel[2] = (-robot_radius * angularError -0.5f*strafeError + 0.866025404f*forwardError)/wheel_radius;
 }
 
 void ViRHaS::stop(void){
@@ -156,9 +157,9 @@ void ViRHaS::stop(void){
 
 //determina velocità in cm/s
 void ViRHaS::direct_kinematics(void){
-     speedTh= +wheel_radius*(speed_act[2]+speed_act[0]+speed_act[1])/(3.0*robot_radius);
-     speedX = wheel_radius*(-2.0*speed_act[1] +speed_act[0] + speed_act[2])/3.0;
-     speedY = sqrt(3)*wheel_radius*(speed_act[2] - speed_act[0])/3.0;
+     speedTh= -wheel_radius*(speed_act[2]+speed_act[0]+speed_act[1])/(3.0*robot_radius);
+     speedX = wheel_radius*(+2.0*speed_act[0] -speed_act[1] - speed_act[2])/3.0;
+     speedY = sqrt(3)*wheel_radius*(speed_act[2] - speed_act[1])/3.0;
      
 
 }
@@ -209,13 +210,6 @@ int ViRHaS::updatePid(double targetValue, double currentValue, int i)   {// comp
 void ViRHaS::getMotorCmS(long deltaT,int pos,int i)  {                                                       
 // (Delta Pos * Distance per 1 pulse) / Delta Time
 speed_act[i] = ((pos - countAnt[i]) * ((2.0f*(float)M_PI*wheel_radius)/encoder_ppr)) / (deltaT/1000.0f);    
-countAnt[i] = pos;
-}
-
-
-void ViRHaS::getMotorAngularSpeed(long deltaT,int pos,int i)  {                                                       
-// Measured in rpm
-speed_act[i] = (pos - countAnt[i]) * (60 /encoder_ppr) / (deltaT/1000.0f);    
 countAnt[i] = pos;
 }
 
