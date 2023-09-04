@@ -9,6 +9,13 @@
   Modification made by Michele Bertoni:
     - added support for MR001-004 drivers
     - minor changes to make this library work with ViRHaS robot
+  Modification made by Massimiliano Nigro:
+    - Changed direct and inverse kinematics formulas
+    - Added write debug string function to tune PID Controller
+    - Changed PID control setpoint to robot twist
+    - Changed PID control to 1 PID for linear and another for rotational speed
+    - Added setters to modify wheel_radius, robot_radius and encoder PPR
+    - Deleted unused functions and constants
 */
 
 #ifndef ViRHaS_h
@@ -24,27 +31,31 @@ class ViRHaS
 {
 private:
 
-  #define KP  0.1f;
-  #define KI  1.0f;
-  #define _MAX_DTH  30.0f     // Maximum wheel angular speed [rad/s]
-  #define _MAX_SP   400.0f   // Maximum setpoint
-  #define _SP_SCALE (_MAX_SP / _MAX_DTH)
   #define LOOPTIME        25                     // PID loop time
-  double speed_req[3];         //SETPOINT
+  double speed_wheel[3];         //SETPOINT
   double speed_act[3];                              // speed (actual value)
   int countAnt[3];
-  int PWM_val[3];                                // (25% = 64; 50% = 127; 75% = 191; 100% = 255)
   double last_error[3];
   double Iterm[3];
-  float Kp;
-  float Ki;
-  float Kd;
+  float Kp_xy;
+  float Ki_xy;
+  float Kd_xy;
+  float Kp_th;
+  float Ki_th;
+  float Kd_th;
   double posX;
   double posY;
   double posTh;
   double speedX;
   double speedY;
   double speedTh;
+  double reqSpeedX;
+  double reqSpeedY;
+  double reqSpeedTh;
+
+  float wheel_radius;
+  float robot_radius;
+  float encoder_ppr;
 
   unsigned long lastMilliLoop;
   unsigned long lastMillis[3];
@@ -59,7 +70,7 @@ private:
   
   
   void getMotorCmS(long deltaT,int pos,int i);
-  
+  void getMotorAngularSpeed(long deltaT,int pos,int i); 
   int updatePid(double targetValue, double currentValue, int i);
   void direct_kinematics(void);
   void makeOdometry(unsigned long int deltaT);
@@ -69,11 +80,8 @@ public:
   ViRHaS(CytronMD & m1,CytronMD & m2, CytronMD & m3,
       Encoder & e1, Encoder & e2, Encoder & e3);
   void run2(float strafe, float forward, float angular);
-  void runM(float m1, float m2, float m3);
-  void setM1Speed(float m1);
-  void setM2Speed(float m2);
-  void setM3Speed(float m3);
-
+  void inverseKinematics(float strafeError, float forwardError, float angularError);
+  
   void PIDLoop(char* debug_msg_static);
 
   double getSpeedX();
@@ -88,15 +96,14 @@ public:
   void setPosY(double _posY);
   void setPosTh(double _posTh);
 
+  void setWheelRadius(float radius);
+  void setRobotRadius(float radius);
+  void setEncoderPPR(float ppr);
+
   void setIterm(int i, double val);
-
-  void setKp(double val);
-  void resetKp();
-
-  void setKi(double val);
-  void resetKi();
     
-  void setKpid(double val, double val1, double val2);
+  void setKpid_xy(double val, double val1, double val2);
+  void setKpid_th(double val, double val1, double val2);
 
   void stop(void);
 
