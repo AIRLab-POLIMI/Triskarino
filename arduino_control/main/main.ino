@@ -1,16 +1,17 @@
 #include <NewPing.h>
 #include <CytronMotorDriver.h>
 #include <Encoder.h>
-#include <ViRHas.h>
+#include <ViRHas2.0.h>
 #include <ros.h>
 #include <triskarino_msgs/RawOdometry.h>
 #include <triskarino_msgs/Sonar.h>
 #include <geometry_msgs/Twist.h>
-#include <std_msgs/String.msg>
+#include <std_msgs/String.h>
 // SONARS
 
 #define SONAR_NUM 4 
 #define MAX_DISTANCE 300 // Max distance returned
+
 
 
 unsigned long pingTimer[SONAR_NUM];
@@ -67,8 +68,11 @@ NewPing sonar[SONAR_NUM] = {
 #define _2_1B 11
 
 //Maximum speed wantd
-#define _MAX_SPEED 80 //cm/s
+#define _MAX_SPEED 50 //cm/s
 #define _MAX_ANGULAR 6.28//rad/s
+#define wheel_radius  3.0f //cm
+#define robot_radius  15.0f  //cm
+#define encoder_ppr 4096.0f 
 
 // Configure the motor driver.
 CytronMD motor1(PWM_PWM, _1_1A, _1_1B); // PWM 2A = Pin 8, PWM 2B = Pin 7. Motor 1 : right robot
@@ -81,14 +85,18 @@ Encoder ENCODER[] = { Encoder(_EP11, _EP12), Encoder(_EP21, _EP22), Encoder(_EP3
 
 //robot class
 ViRHaS virhas = ViRHaS(motor1, motor2, motor3, ENCODER[0], ENCODER[1], ENCODER[2]);
+//debug ros info
+char debug_msg_static[200];
+std_msgs::String debug_msg;
+ros::Publisher debugPub("arduinoDebug", &debug_msg);
 
 //Uses the contents of the twist message to move the robot
 void moveRobot(const geometry_msgs::Twist& twist_msg){
   if(twist_msg.linear.x == 0.0 && twist_msg.linear.y == 0.0 && twist_msg.angular.z == 0.0){
     virhas.stop();
   }else{
-    virhas.run2(twist_msg.linear.y * _MAX_SPEED, twist_msg.linear.x * _MAX_SPEED, twist_msg.angular.z * _MAX_ANGULAR);
-    virhas.PIDLoop(&debug_msg_static);
+    virhas.run2(twist_msg.linear.x * _MAX_SPEED, twist_msg.linear.y * _MAX_SPEED, twist_msg.angular.z * _MAX_ANGULAR);
+    virhas.PIDLoop(debug_msg_static);
     debug_msg.data = debug_msg_static;
 
   }
@@ -104,12 +112,14 @@ ros::Publisher odomPub("rawOdometry", &odom_msg);
 triskarino_msgs::Sonar sonar_msg;
 ros::Publisher sonarPub("sonar", &sonar_msg);
 ros::Subscriber<geometry_msgs::Twist> twistSub("cmd_vel", &moveRobot );
-std_msgs::String debug_msg;
-ros::Publisher debugPub("arduinoDebug", &debug_msg);
-char[200] debug_msg_static;
+
 
 void setup() {
-  virhas.setKpid(2, 1, 0.7);
+  virhas.setKpid_th(5,1.25,0.7);
+  virhas.setKpid_xy(5,4,0.7);
+  virhas.setWheelRadius(wheel_radius);
+  virhas.setEncoderPPR(encoder_ppr);
+  virhas.setRobotRadius(robot_radius);
   virhas.stop();
   Serial.begin(250000);
   nh.getHardware()->setBaud(250000);
@@ -136,7 +146,7 @@ void publishSensorMsg(){
   fillOdometryMsg();
   sonarPub.publish(&sonar_msg);
   odomPub.publish(&odom_msg);
-  debug_msg.publish(&debug_msg);
+  debugPub.publish(&debug_msg);
   debug_msg_static[0] = '\0';
 }
 

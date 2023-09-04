@@ -20,36 +20,38 @@ ViRHaS::ViRHaS(CytronMD & m1, CytronMD & m2,CytronMD & m3, Encoder & e1, Encoder
   _m2.setSpeed(0);
   //_m3.init1M();
   _m3.setSpeed(0);
+  //Variables to store odometry results
    posX=0;
    posY=0;
    posTh=0;
    speedX=0;
    speedY=0;
    speedTh=0;
-
-   speed_req[0] = 0.0;                      //SETPOINT
+  //Setpoint speed, calculated in run2 function
+   speed_req[0] = 0.0;                      
    speed_req[1] = 0.0;
    speed_req[2] = 0.0;
-
-   speed_act[0] = 0.0;                              // speed (actual value)
+  //Actual speed, calculated in getMotorCms using motor encoders
+   speed_act[0] = 0.0;                              
    speed_act[1] = 0.0;
    speed_act[2] = 0.0;
-
+  //Actuation value for the motors
    PWM_val[0] = 0.0;
    PWM_val[1] = 0.0;
    PWM_val[2] = 0.0;
-
+  //Error term used for PID control
    last_error[0]=0.0;
    last_error[1]=0.0;
    last_error[2]=0.0;
    Iterm[0]=0.0;
    Iterm[1]=0.0;
    Iterm[2]=0.0;
+  //Last position of wheels given by encoders
+   countAnt[0] = 0;
+   countAnt[1] = 0;
+   countAnt[2] = 0;
 
-   //Kp = KP;
-   //Ki = KI;
-   //Kd = KD;
-
+  //Used to measure elapsed time in order to measure wheel actual speed
    lastMilliLoop=0;
    lastMillis[0]=0;
    lastMillis[1]=0;
@@ -66,17 +68,17 @@ void ViRHaS::PIDLoop(char* debug_msg_static){
      long ActualPos[3];
      ActualPos[0]=_e1.read();
      deltaT=millis()-lastMillis[0];
-     getMotorRadS(deltaT,ActualPos[0],0);// calculate speed
+     getMotorCmS(deltaT,ActualPos[0],0);// calculate speed
      lastMillis[0] = millis();
 
      ActualPos[1]=_e2.read();
      deltaT=millis()-lastMillis[1];
-     getMotorRadS(deltaT,ActualPos[1],1);
+     getMotorCmS(deltaT,ActualPos[1],1);
      lastMillis[1] = millis();
 
      ActualPos[2]=_e3.read();
      deltaT=millis()-lastMillis[2];
-     getMotorRadS(deltaT,ActualPos[2],2);
+     getMotorCmS(deltaT,ActualPos[2],2);
      lastMillis[2] = millis();                                       // calculate speed,
 
      PWM_val[0]= updatePid(speed_req[0], speed_act[0], 0);           // compute PWM value
@@ -85,53 +87,41 @@ void ViRHaS::PIDLoop(char* debug_msg_static){
      _m1.setSpeed(PWM_val[0]);
      _m2.setSpeed(PWM_val[1]);
      _m3.setSpeed(PWM_val[2]);
-     
-     direct_kinematics();
-     makeOdometry(deltaPid);
-     //After Make Odometry, posx,posy, posTh, speedX,speedY,speedTh are:
-     snprintf(debug_msg_static, 200, "(%f,%f,%f),(%f,%f,%f)",posX,posY,posTh,speedX,speedY,speedTh)
-
+     //Calculates twist (speedX,Y,Th) from actual wheel speed
+    direct_kinematics();
+    //Calculates pose (posX,Y,Th) given twist
+    makeOdometry(deltaPid);
+    writeDebugInfo(debug_msg_static);
   }
 
 }
 
-void ViRHaS::run(float forward, float angular) {
-
-  #define m1_R     (-1.0f / wheel_radius)
-  #define mL_R     (-robot_radius / wheel_radius)
-  #define C60_R    (0.500000000f / wheel_radius)   // cos(60°) / R
-  #define C30_R    (0.866025404f / wheel_radius)   // cos(30°) / R
-
-
-    //speed scomposition
-    const float dy12 = C30_R * forward;
-    const float dthz123 = mL_R * angular;
-    // Wheel angular speeds
-    speed_req[0] = + dy12 + dthz123;
-    speed_req[1] = + dthz123;
-    speed_req[2] = - dy12 + dthz123;
-
+//Writes in the debug string the setpoint and actual speed to allow for PID Tuning
+void ViRHaS::writeDebugInfo(char* debug_msg_static){
+  debug_msg_static[0]='(';
+  dtostrf(speed_req[0],3,2, &debug_msg_static[1]);
+  debug_msg_static[4] = ',';
+  dtostrf(speed_req[1],3,2, &debug_msg_static[5]);
+  debug_msg_static[8] = ',';
+  dtostrf(speed_req[2],3,2, &debug_msg_static[9]);
+  debug_msg_static[12] = ')';
+  debug_msg_static[13] = ',';
+  debug_msg_static[14] = '(';
+  dtostrf(speed_act[0],3,2, &debug_msg_static[15]);
+  debug_msg_static[18] = ',';
+  dtostrf(speed_act[1],3,2, &debug_msg_static[19]);
+  debug_msg_static[22] = ',';
+  dtostrf(speed_act[2],3,2, &debug_msg_static[23]);
+  debug_msg_static[26] = ')';
+  debug_msg_static[27] = '\0';
 }
+
 
 void ViRHaS::run2(float strafe, float forward, float angular) {
 
-  #define m1_R     (-1.0f / wheel_radius)
-  #define mL_R     (-robot_radius / wheel_radius)
-  #define C60_R    (0.500000000f / wheel_radius)   // cos(60°) / R
-  #define C30_R    (0.866025404f / wheel_radius)   // cos(30°) / R
-
-
-    const float dx12 = C60_R * strafe;
-  const float dy12 = C30_R * forward;
-  const float dthz123 = mL_R * angular;
-
-  speed_req[0] = dx12 + dy12 + dthz123; //motore anteriore dx
-  speed_req[1] = m1_R * strafe + dthz123; // motore posteriore
-  speed_req[2] = dx12 - dy12 + dthz123; //motore anteriore sx
-//  _m1.setSpeed(speed_req[0]);
-//  _m2.setSpeed(speed_req[1]);
-//  _m3.setSpeed(speed_req[2]);
-    
+  speed_req[0] = (-robot_radius * angular + strafe)/wheel_radius;
+  speed_req[1] = (-robot_radius * angular -0.5f*strafe - 0.866025404f*forward)/wheel_radius;
+  speed_req[2] = (-robot_radius * angular -0.5f*strafe + 0.866025404f*forward)/wheel_radius;
 }
 
 void ViRHaS::stop(void){
@@ -149,15 +139,6 @@ void ViRHaS::stop(void){
   //posTh=0;
 }
 
-void ViRHaS::stop2(){
-  _m1.setSpeed(0);
-  _m2.setSpeed(0);
-  _m3.setSpeed(0);
-  for(int i=0;i<NMOTOR;i++){
-    speed_act[i]=0;
-    speed_req[i]=0;
-  }
-}
 
 void ViRHaS::runM(float m1, float m2, float m3){
     // Motor setpoints
@@ -177,21 +158,22 @@ void ViRHaS::setM3Speed(float m3){
 
 //determina velocità in cm/s
 void ViRHaS::direct_kinematics(void){
-
-     speedX = 0.5*wheel_radius*(speed_act[0] - speed_act[2])/cos((float)PI/6.0f);
-     speedY = wheel_radius*(speed_act[2] + speed_act[0]-2.0*speed_act[1])/3.0;
-     speedTh= wheel_radius*(speed_act[2]+speed_act[0]+speed_act[1])/3.0/robot_radius;
+     speedTh= -wheel_radius*(speed_act[2]+speed_act[0]+speed_act[1])/(3.0*robot_radius);
+     speedX = wheel_radius*(+2.0*speed_act[0] -speed_act[1] - speed_act[2])/3.0;
+     speedY = sqrt(3)*wheel_radius*(speed_act[2] - speed_act[1])/3.0;
+     
 
 }
 
 void ViRHaS::makeOdometry(unsigned long int deltaT){
-  double delta_x = (speedX * cos(posTh) - speedY * sin(posTh)) * deltaT/1000.0;
-  double delta_y = (speedX * sin(posTh) + speedY * cos(posTh)) * deltaT/1000.0;
-  double delta_th = speedTh * deltaT/1000.0;
+  double delta_x = (speedX * cos(posTh) - speedY * sin(posTh)) * (deltaT/1000.0);
+  double delta_y = (speedX * sin(posTh) + speedY * cos(posTh)) * (deltaT/1000.0);
+  double delta_th = speedTh * (deltaT/1000.0);
 
   posX+=delta_x;
   posY+=delta_y;
   posTh+=delta_th;
+
 
 }
 
@@ -212,24 +194,12 @@ int ViRHaS::updatePid(double targetValue, double currentValue, int i)   {// comp
 
 
 void ViRHaS::getMotorCmS(long deltaT,int pos,int i)  {                                                        // calculate speed, volts and Amps
-static int countAnt[3] = {0,0,0};          // last count
-speed_act[i] = ((pos - countAnt[i])*(2.0f*(float)PI*wheel_radius)*1000.0f)/(deltaT*1920L);         // 16 pulses X 29 gear ratio = 464 counts per output shaft rev
- countAnt[i] = pos;
+//Trusting the use of 1920 as PPR (pulses per revolution)
+// (Delta Pos * Distance per 1 pulse) / Delta Time
+speed_act[i] = ((pos - countAnt[i]) * ((2.0f*(float)M_PI*wheel_radius)/1920.0f)) / (deltaT/1000.0f);     // 16 pulses X 29 gear ratio = 464 counts per output shaft rev
+countAnt[i] = pos;
 }
 
-
-
-void ViRHaS::getMotorRadS(long deltaT,int pos,int i)  {                                                        // calculate speed, volts and Amps
-static int countAnt[3] = {0,0,0};                                                   // last count
- speed_act[i] =(float) ((pos - countAnt[i])*(1000L/deltaT)*2.0f*(float)PI)/(1920.0f);          // 16 pulses X 29 gear ratio = 464 counts per output shaft rev
- countAnt[i] = pos;
-}
-
-void ViRHaS::getMotorRPM(long deltaT,int pos,int i)  {                                                        // calculate speed, volts and Amps
-static int countAnt[3] = {0,0,0};                                                   // last count
- speed_act[i] = ((pos - countAnt[i])*(60L*(1000L/deltaT)))/(1920);          // 16 pulses X 29 gear ratio = 464 counts per output shaft rev
- countAnt[i] = pos;
-}
 
 double ViRHaS::getPosX(){
   return posX;
@@ -278,6 +248,7 @@ void ViRHaS::setKpid(double val, double val1, double val2){
   Ki=val1;
   Kd=val2;
 }
+
 
 void ViRHaS::resetKp(){
   Kp=KP;

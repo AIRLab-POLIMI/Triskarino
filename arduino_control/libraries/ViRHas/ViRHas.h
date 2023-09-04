@@ -19,21 +19,20 @@
 #include "Encoder.h"
 
 #define NMOTOR 3
-#define wheel_radius  3.5f //cm
-#define robot_radius  12.5f  //cm
 
 class ViRHaS
 {
 private:
 
-  #define KP  0.35f;
-  #define KI  0.8f;
+  #define KP  0.1f;
+  #define KI  1.0f;
   #define _MAX_DTH  30.0f     // Maximum wheel angular speed [rad/s]
   #define _MAX_SP   400.0f   // Maximum setpoint
   #define _SP_SCALE (_MAX_SP / _MAX_DTH)
   #define LOOPTIME        25                     // PID loop time
   double speed_req[3];         //SETPOINT
   double speed_act[3];                              // speed (actual value)
+  int countAnt[3];
   int PWM_val[3];                                // (25% = 64; 50% = 127; 75% = 191; 100% = 255)
   double last_error[3];
   double Iterm[3];
@@ -58,18 +57,17 @@ private:
   Encoder & _e2;
   Encoder & _e3;
   
-  void getMotorRPM(long deltaT,int pos,int i);
-  void getMotorRadS(long deltaT,int pos,int i);
+  
   void getMotorCmS(long deltaT,int pos,int i);
   
   int updatePid(double targetValue, double currentValue, int i);
   void direct_kinematics(void);
   void makeOdometry(unsigned long int deltaT);
+  void writeDebugInfo(char* debug_msg_static);
 
 public:
   ViRHaS(CytronMD & m1,CytronMD & m2, CytronMD & m3,
       Encoder & e1, Encoder & e2, Encoder & e3);
-  void run(float forward, float angular);
   void run2(float strafe, float forward, float angular);
   void runM(float m1, float m2, float m3);
   void setM1Speed(float m1);
@@ -101,7 +99,6 @@ public:
   void setKpid(double val, double val1, double val2);
 
   void stop(void);
-  void stop2(void);
 
 
 };
