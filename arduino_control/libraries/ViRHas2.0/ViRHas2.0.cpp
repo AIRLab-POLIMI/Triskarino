@@ -37,6 +37,10 @@ ViRHaS::ViRHaS(CytronMD & m1, CytronMD & m2,CytronMD & m3, Encoder & e1, Encoder
    reqSpeedX=0;
    reqSpeedY=0;
    reqSpeedTh=0;
+  //Variables used to store the last setpoint, if the setpoint remains the same we use the integral term
+  lastSP[0] = 0.0;
+  lastSP[1]= 0.0;
+  lastSP[2] = 0.0;
   //Speed of the wheels calculated from inverse kinematics
    speed_wheel[0] = 0.0;                      
    speed_wheel[1] = 0.0;
@@ -92,9 +96,9 @@ void ViRHaS::PIDLoop(char* debug_msg_static){
      forwardError = updatePid(reqSpeedY,speedY,1);
      angularError = updatePid(reqSpeedTh,speedTh,2);
      inverseKinematics(strafeError,forwardError,angularError);
-     _m1.setSpeed(speed_wheel[0]);
-     _m2.setSpeed(speed_wheel[1]);
-     _m3.setSpeed(speed_wheel[2]);
+     _m1.setSpeed(constrain(int(speed_wheel[0]), -255, 255));
+     _m2.setSpeed(constrain(int(speed_wheel[1]), -255, 255));
+     _m3.setSpeed(constrain(int(speed_wheel[2]), -255, 255));
     
     //Calculates pose (posX,Y,Th) given twist
     makeOdometry(deltaPid);
@@ -194,15 +198,15 @@ int ViRHaS::updatePid(double targetValue, double currentValue, int i)   {// comp
     Ki = Ki_xy;
     Kd = Kd_xy;
   }
+  if (lastSP[i] != targetValue){
+    Iterm[i] = 0;
+  }
   error = targetValue - currentValue;
   Iterm[i] += error*Ki;
-  if(Iterm[i]>255) Iterm[i]=255;
-  else if(Iterm[i]<-255) Iterm[i]=-255;
   double deltaError = error - last_error[i];
   pidTerm = (Kp * error) + (Iterm[i]) + (Kd * deltaError);
   last_error[i] = error;
-  int output=constrain(int(pidTerm), -255, 255);
-  return output;
+  return pidTerm;
 }
 
 

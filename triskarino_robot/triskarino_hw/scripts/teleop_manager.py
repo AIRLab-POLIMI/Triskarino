@@ -24,7 +24,7 @@ class TeleopManagerNode():
     NODE_NAME = "teleop_manager"
     def __init__(self):
         rospy.init_node("teleop_manager")
-        self.twist_pub = rospy.Publisher('cmd_vel', Twist, queue_size=PUBLISHER_QUEUE_SIZE)
+        self.twist_pub = rospy.Publisher('cmd_joy', Twist, queue_size=PUBLISHER_QUEUE_SIZE)
         self.light_pub = rospy.Publisher('light',Light,queue_size=PUBLISHER_QUEUE_SIZE)
         self.sound_pub = rospy.Publisher('sound',Sound,queue_size=PUBLISHER_QUEUE_SIZE)
         self.gamepad = InputDevice(INPUT_PATH)

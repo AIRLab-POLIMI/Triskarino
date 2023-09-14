@@ -37,6 +37,7 @@ private:
   int countAnt[3];
   double last_error[3];
   double Iterm[3];
+  double lastSP[3];
   float Kp_xy;
   float Ki_xy;
   float Kd_xy;

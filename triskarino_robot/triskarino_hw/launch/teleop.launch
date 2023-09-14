@@ -2,6 +2,7 @@
 
   <node pkg="triskarino_hw" type="teleop_manager.py" name="teleop_manager" output="screen" />
   <node pkg="triskarino_hw" type="odom_manager.py" name="odom_manager" output="screen" />
+  <node pkg="triskarino_hw" type="speed_manager.py" name="speed_manager" output="screen" />
   <node pkg="rosserial_python" type="serial_node.py" name="serial_connection_arduino" output="screen">
     <rosparam command="load" file="$(find triskarino_hw)/config/arduino_param.yaml" />
   </node>

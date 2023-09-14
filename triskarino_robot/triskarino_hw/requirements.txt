@@ -1,3 +1,5 @@
 pyserial
 opencv-python 
 evdev
+pandas
+seaborn

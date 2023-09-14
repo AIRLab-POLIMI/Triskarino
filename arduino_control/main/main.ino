@@ -68,7 +68,7 @@ NewPing sonar[SONAR_NUM] = {
 #define _2_1B 11
 
 //Maximum speed wantd
-#define _MAX_SPEED 50 //cm/s
+#define _MAX_SPEED 100 //cm/s
 #define _MAX_ANGULAR 6.28//rad/s
 #define wheel_radius  3.0f //cm
 #define robot_radius  15.0f  //cm
