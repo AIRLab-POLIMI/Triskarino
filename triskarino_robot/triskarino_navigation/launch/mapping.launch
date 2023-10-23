@@ -1,10 +1,19 @@
 <launch>
 <include file="$(find triskarino_hw)/launch/lidar.launch"/>
 <include file="$(find triskarino_hw)/launch/teleop.launch"/>
+<include file="$(find triskarino_description)/launch/state_publisher.launch"/>
 
 <node pkg="gmapping" type="slam_gmapping" name="gmapping_node" output="screen" >
     <rosparam command="load" file="$(find triskarino_navigation)/params/gmapping.yaml" />
     <remap from="scan" to="scan_filtered" />
 </node>
+
+<!--Run RViz on remote machine-->
+<group>
+    <machine default="true">
+        <rosparam file="$(find triskarino_navigation)/params/remote_machine.yaml" command="load" />
+    </machine>
+    <include file="$(find triskarino_description)/launch/rviz_navigation.launch"/>
+</group>
 
 </launch>

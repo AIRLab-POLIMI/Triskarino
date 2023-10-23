@@ -1,17 +1,14 @@
 import pymeshlab
+import argparse
 
 
-def calculate_inertial_tag(file_name=None, mass=-1, pr=8, scale_factor=0.03):
+def calculate_inertial_tag(filepath=None, mass=-1, precision=8, scale_factor=1.0):
     ms = pymeshlab.MeshSet()
 
-    if file_name is None:
-        print('Please put the input file to the same folder as this script and type in the full name of your file.')
-        file_name = input()
-    ms.load_new_mesh(file_name)
+    ms.load_new_mesh(filepath)
 
     if mass < 0:
-        print('Please type the mass of your object in kg')
-        mass = float(input())
+        raise Exception("Negative mass argument")
 
     print('Calculating the center of mass')
     geom = ms.get_geometric_measures()
@@ -28,9 +25,15 @@ def calculate_inertial_tag(file_name=None, mass=-1, pr=8, scale_factor=0.03):
     volume = geom['mesh_volume']
     tensor = geom['inertia_tensor'] / pow(scale_factor, 2) * mass / volume
 
-    intertial_xml = f'<inertial>\n  <origin xyz="{com[0]:.{pr}f} {com[1]:.{pr}f} {com[2]:.{pr}f}"/>\n  <mass value="{mass:.{pr}f}"/>\n  <inertia ixx="{tensor[0, 0]:.{pr}f}" ixy="{tensor[1, 0]:.{pr}f}" ixz="{tensor[2, 0]:.{pr}f}" iyy="{tensor[1, 1]:.{pr}f}" iyz="{tensor[1, 2]:.{pr}f}" izz="{tensor[2, 2]:.{pr}f}"/>\n</inertial>'
+    intertial_xml = f'<inertial>\n  <origin xyz="{com[0]:.{precision}f} {com[1]:.{precision}f} {com[2]:.{precision}f}"/>\n  <mass value="{mass:.{precision}f}"/>\n  <inertia ixx="{tensor[0, 0]:.{precision}f}" ixy="{tensor[1, 0]:.{precision}f}" ixz="{tensor[2, 0]:.{precision}f}" iyy="{tensor[1, 1]:.{precision}f}" iyz="{tensor[1, 2]:.{precision}f}" izz="{tensor[2, 2]:.{precision}f}"/>\n</inertial>'
     print(intertial_xml)
 
 
 if __name__ == '__main__':
-    calculate_inertial_tag()  # TODO command line arguments
+    parser = argparse.ArgumentParser(description='Calculates inertial matrix for 3D Mesh. Takes as input mass, filepath and desired scale factor and returns as a string the xml inertial tag to put in the urdf.')
+    parser.add_argument("filepath", help="Path of the 3D Mesh file", action="store",type=str)
+    parser.add_argument("mass", help="Mass of the 3D Mesh", action="store",type=float)
+    parser.add_argument("-s", "--scale_factor", help="Scale factor used to scale the 3D Mesh. Default value is 1.", default=1.0, action="store",type=float)
+    parser.add_argument("-pr", "--precision", help="Desired precision for inertia factors. Default value is 8.",default=8,  action="store",type=int)
+    arguments = parser.parse_args()
+    calculate_inertial_tag(**vars(arguments))

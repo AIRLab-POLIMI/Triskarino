@@ -106,6 +106,9 @@ find_package(catkin REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
     triskarino_hw
     gmapping
+    amcl
+    move_base
+    teleop_twist_keyboard
 )
 
 ## Specify additional locations of header files

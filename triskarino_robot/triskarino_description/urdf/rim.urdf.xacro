@@ -2,13 +2,14 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 <xacro:include filename="$(find triskarino_description)/urdf/roller.urdf.xacro"/>
+<xacro:include filename="$(find triskarino_description)/urdf/inertial_macros.xacro"/>
 
 <xacro:macro
 	name="rim_macro"
-	params="name color xyz rpy scale_factor">
+	params="name color xyz rpy">
 
 		<joint name="rim_${name}_joint" type="continuous">
-			<parent link="base_link" />
+			<parent link="plate_link" />
 			<child link="rim_${name}_link"/>
 			<axis xyz="0 0 1"/>
 			<origin xyz="${xyz}" rpy="${rpy}"/>
@@ -17,32 +18,27 @@
 
 		<link name="rim_${name}_link">
 			<inertial>
-				<origin xyz="0 0 -0.000343"/>
-				<mass value="${0.00835758 * scale_factor * scale_factor * scale_factor}"/>
-				<inertia
-					ixx="${6.63684e-07 * scale_factor * scale_factor * scale_factor * scale_factor * scale_factor}"
-					ixy="0"
-					ixz="0"
-					iyy="${6.63684e-07 * scale_factor * scale_factor * scale_factor * scale_factor * scale_factor}"
-					iyz="0"
-					izz="${9.40333e-07 * scale_factor * scale_factor * scale_factor * scale_factor * scale_factor}"/>
-
-			</inertial>
+				<origin xyz="-0.00000435 -0.00000262 -0.00011790"/>
+				<mass value="0.20000000"/>
+				<inertia ixx="0.00005620" ixy="-0.00000000" ixz="0.00000000" iyy="0.00005620" iyz="-0.00000000" izz="0.00007735"/>
+			  </inertial>
 			<visual>
 				<geometry>
-
-					<mesh scale="${scale_factor} ${scale_factor} ${scale_factor}" filename="package://triskarino_description/meshes/rim.stl"/>
+					<mesh filename="package://triskarino_description/meshes/rim_scaled.stl"/>
 				</geometry>
 				<material name="rim_${name}_material">
 					<color rgba="${color} 1"/>
 				</material>
 			</visual>
 			<collision>
+				<origin xyz="0 0 0" rpy="0 0 0" />
 				<geometry>
-					<mesh scale="${scale_factor} ${scale_factor} ${scale_factor}" filename="package://triskarino_description/meshes/rim.stl"/>
+					<cylinder length="0.02" radius="0.032" />
 				</geometry>
+				<surface>
+					<bounce restitution_coefficient="0.0001" />
+				</surface>
 			</collision>
-			
 		</link>
 
 		
@@ -51,56 +47,48 @@
 			name="e"
 			xyz="0.01355 0 0.0055"
 			rpy="-1.570796326794896 0 0"
-            scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
 			parent="rim_${name}_link"
 			name="ne"
 			xyz="0.00958129689 0.00958129689 -0.0055"
 			rpy="-1.570796326794896 0 0.7853981633974483"
-            scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
 			parent="rim_${name}_link"
 			name="n"
 			xyz="0 0.01355 0.0055"
 			rpy="-1.570796326794896 0 1.570796326794896"
-            scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
 			parent="rim_${name}_link"
 			name="nw"
 			xyz="-0.00958129689 0.00958129689 -0.0055"
 			rpy="-1.570796326794896 0 2.356194490192345"
-            scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
 			parent="rim_${name}_link"
 			name="w"
 			xyz="-0.01355 0 0.0055"
 			rpy="-1.570796326794896 0 3.141592653589793"
-            scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
 			parent="rim_${name}_link"
 			name="sw"
 			xyz="-0.00958129689 -0.00958129689 -0.0055"
 			rpy="-1.570796326794896 0 -2.356194490192345"
-            scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
 			parent="rim_${name}_link"
 			name="s"
 			xyz="0 -0.01355 0.0055"
 			rpy="-1.570796326794896 0 -1.570796326794896"
-            scale_factor="${scale_factor}"
 		/>
 		<xacro:roller_macro
 			parent="rim_${name}_link"
 			name="se"
 			xyz="0.00958129689 -0.00958129689 -0.0055"
 			rpy="-1.570796326794896 0 -0.7853981633974483"
-            scale_factor="${scale_factor}"
 		/>
 
 		<transmission name="rim_${name}_transmission">
@@ -113,6 +101,30 @@
 				<mechanicalReduction>1</mechanicalReduction>
 			</actuator>
 		</transmission>
+		
+	<gazebo reference="rim_${name}_link">
+		<collision name="rim_${name}_link_collision">
+			<surface>
+			  <contact>
+                <ode>
+                  <kp>1e+6</kp>
+                  <kd>1</kd>
+                  <min_depth>0.00001</min_depth>
+                </ode>
+			  </contact>
+			  <friction>
+				<ode>
+				<mu>0</mu>
+				<mu2>0</mu2>
+				<max_contacts>2</max_contacts>
+				<fdir1>0 0 1</fdir1>
+				<slip1>1</slip1>
+				<slip2>1</slip2>
+				</ode>
+			  </friction>
+			</surface>
+		  </collision>
+  	</gazebo>
 
 	</xacro:macro>
 

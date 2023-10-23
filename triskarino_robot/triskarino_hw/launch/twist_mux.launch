@@ -1,0 +1,11 @@
+<launch>
+
+    <arg name="cmd_vel_out" default="cmd_vel_out"/>
+    <arg name="config_topics" default="$(find triskarino_hw)/config/twist_mux.yaml"/>
+
+    <include file="$(find twist_mux)/launch/twist_mux.launch" >
+        <arg name="" value="$(arg align_depth)"/>
+        <arg name=""     value="$(arg filters)"/>
+      </include>
+    
+</launch>

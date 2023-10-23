@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from scipy.signal import find_peaks
 import numpy as np
 import math
+import os 
 
 PUBLISHER_QUEUE_SIZE = 100
 
@@ -17,7 +18,7 @@ class DebugArduinoNode():
     def __init__(self):
         rospy.init_node("debugArduino")
         self.debug_sub = rospy.Subscriber('arduinoDebug', String, self.log_debug)
-        self.debug_df = pd.DataFrame(columns=['SP Speed X','SP Speed Y','SP Speed Th','PV Speed X','PV Speed Y','PV Speed Th','Time'],dtype=object)
+        self.debug_df = pd.DataFrame(columns=['SP Speed 0','SP Speed 1','SP Speed 2','PV Speed 0','PV Speed 1','PV Speed 2','Time'],dtype=object)
         self.start_time = time.time()
 
     def reset_graph_settings(self):
@@ -35,12 +36,12 @@ class DebugArduinoNode():
            return
        elapsed_time = time.time() - self.start_time
        debug_list = re.findall(r"[-+]?(?:\d*\.*\d+)",debug_msg.data)
-       new_row = {'SP Speed X':float(debug_list[0]),
-                  'SP Speed Y':float(debug_list[1]),
-                  'SP Speed Th':float(debug_list[2]),
-                  'PV Speed X':float(debug_list[3]),
-                  'PV Speed Y':float(debug_list[4]),
-                  'PV Speed Th':float(debug_list[5]),
+       new_row = {'SP Speed 0':float(debug_list[0]),
+                  'SP Speed 1':float(debug_list[1]),
+                  'SP Speed 2':float(debug_list[2]),
+                  'PV Speed 0':float(debug_list[3]),
+                  'PV Speed 1':float(debug_list[4]),
+                  'PV Speed 2':float(debug_list[5]),
                   'Time':elapsed_time
                   }
        self.debug_df = self.debug_df.append(new_row,ignore_index=True)
@@ -49,23 +50,22 @@ class DebugArduinoNode():
     def save_plots(self):
         fig, axes = plt.subplots(3,1)
         #Preparing df
-        melted_x_df = pd.melt(self.debug_df[["Time","SP Speed X","PV Speed X"]],id_vars="Time",value_vars=["SP Speed X","PV Speed X"],var_name="",value_name="Speed X")
-        melted_y_df = pd.melt(self.debug_df[["Time","SP Speed Y","PV Speed Y"]],id_vars="Time",value_vars=["SP Speed Y","PV Speed Y"],var_name="",value_name="Speed Y")
-        melted_th_df = pd.melt(self.debug_df[["Time","SP Speed Th","PV Speed Th"]],id_vars="Time",value_vars=["SP Speed Th","PV Speed Th"],var_name="",value_name="Speed Th")
+        melted_x_df = pd.melt(self.debug_df[["Time","SP Speed 0","PV Speed 0"]],id_vars="Time",value_vars=["SP Speed 0","PV Speed 0"],var_name="",value_name="Speed 0")
+        melted_y_df = pd.melt(self.debug_df[["Time","SP Speed 1","PV Speed 1"]],id_vars="Time",value_vars=["SP Speed 1","PV Speed 1"],var_name="",value_name="Speed 1")
+        melted_th_df = pd.melt(self.debug_df[["Time","SP Speed 2","PV Speed 2"]],id_vars="Time",value_vars=["SP Speed 2","PV Speed 2"],var_name="",value_name="Speed 2")
         #X Plot
         self.reset_graph_settings()
-        sns.lineplot(x="Time",y="Speed X",hue="",data=melted_x_df,ax=axes[0])
-        #Getting Peaks for X
-        data_x, data_y = self.find_peaks(self.debug_df["Time"].to_numpy(),self.debug_df["PV Speed X"].to_numpy())
-        axes[0].plot(data_x, data_y, marker="x")
-        self.period = self.find_period(data_x)
+        sns.lineplot(x="Time",y="Speed 0",hue="",data=melted_x_df,ax=axes[0])
         #Y Plot
         self.reset_graph_settings()
-        sns.lineplot(x="Time",y="Speed Y",hue="",data=melted_y_df,ax=axes[1])
+        sns.lineplot(x="Time",y="Speed 1",hue="",data=melted_y_df,ax=axes[1])
         #Th Plot
         self.reset_graph_settings()
-        sns.lineplot(x="Time",y="Speed Th",hue="",data=melted_th_df,ax=axes[2])
-        fig.savefig("./speeds_control.png",bbox_inches='tight')
+        sns.lineplot(x="Time",y="Speed 2",hue="",data=melted_th_df,ax=axes[2])
+        if os.path.isfile("./speeds_control_fig.png"):
+            os.remove("./speeds_control_fig.png")
+        fig.savefig("./speeds_control_fig.png",bbox_inches='tight')
+    
     
     def find_peaks(self,data_x,data_y):
         peaks, _ = find_peaks(data_y, height=0)
@@ -75,11 +75,14 @@ class DebugArduinoNode():
         #Finds the difference between each subsequent peak's x coordinate
         periods = [peak - peaks_x[idx - 1] for idx, peak in enumerate(peaks_x) if idx > 0] 
         #Between all of the differences, creates a mask that highlights subsequent peaks with similar distances (continuous oscillations)
-        mask = [1 if math.isclose(element,periods[idx-1],rel_tol=0.001) else 0 for idx, element in enumerate(periods) if idx > 0]
+        mask = [1 if math.isclose(element,periods[idx-1],rel_tol=0.1) else 0 for idx, element in enumerate(periods) if idx > 0]
         #Finds the idxs of the periods that highlight the longest continuous oscillation
         idxs = self.find_idxs_mask(mask)
         #Gets the average period of the sequence
-        average_period = np.asarray(periods)[idxs].mean()
+        if len(idxs) > 0:
+            average_period = np.asarray(periods)[idxs].mean()
+        else:
+            average_period = 0
         return average_period
 
     #Returns the idxs of the longest continuous sequences of 1s in the mask 
@@ -97,7 +100,8 @@ class DebugArduinoNode():
             if elem == 0:
                 counter = 0
                 idxs_temp.clear()
-        idxs_max.append(idxs_max[-1]+1)
+        if len(idxs_max) > 0:
+            idxs_max.append(idxs_max[-1]+1)
         return idxs_max
 
 
@@ -113,7 +117,6 @@ if __name__ == '__main__':
     rospy.loginfo( node.NODE_NAME + " running..." )
     rospy.spin()
     node.save_plots()
-    rospy.loginfo("Period of oscillation is " + str(node.period))
     node.debug_df.to_csv("./pid_df.csv")
     rospy.loginfo( node.NODE_NAME + " stopped." )
     exit(0)

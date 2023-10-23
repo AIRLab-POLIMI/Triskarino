@@ -8,7 +8,7 @@ from evdev import InputDevice
 INPUT_PATH = "/dev/input/by-id/usb-Logitech_Wireless_Gamepad_F710_653595B3-event-joystick"
 ANALOG_MAX_VALUE = 32768
 BUTTON_MAX_VALUE = 255
-PUBLISHER_QUEUE_SIZE = 10
+PUBLISHER_QUEUE_SIZE = 100
 #CUTTING MAXIMUM ANGULAR AND LINEAR VELOCITIES TO HAVE BETTER CONTROL WITH JOYSTICK
 MAX_ANGULAR = 1.0
 MAX_LINEAR = 1.0
@@ -69,19 +69,19 @@ class TeleopManagerNode():
                     publish_sound = False
             elif event.code == 17:
                 #UP/DOWN arrow, controls robot forward and backwards movement
-                twist_msg.linear.x = -0.5 * event.value
+                twist_msg.linear.y = +0.5 * event.value
                 publish_twist = True
             elif event.code == 16:
                 #RIGHT/LEFT arrow, controls robot right and left
-                twist_msg.linear.y = -0.5 * event.value
+                twist_msg.linear.x = +0.5 * event.value
                 publish_twist = True
             elif event.code == 4:
                 #UP/DOWN analogic, controls robot forward and backwards movement
-                twist_msg.linear.x = - round((event.value / ANALOG_MAX_VALUE) * MAX_LINEAR,ROUND_DIGITS_LINEAR)
+                twist_msg.linear.y = round((event.value / ANALOG_MAX_VALUE) * MAX_LINEAR,ROUND_DIGITS_LINEAR)
                 publish_twist = True
             elif event.code == 3: 
                 #RIGHT/LEFT analogic, controls robot right and left
-                twist_msg.linear.y = - round((event.value / ANALOG_MAX_VALUE) * MAX_LINEAR,ROUND_DIGITS_LINEAR)
+                twist_msg.linear.x = round((event.value / ANALOG_MAX_VALUE) * MAX_LINEAR,ROUND_DIGITS_LINEAR)
                 publish_twist = True
             elif event.code == 2:
                 #LT controls left rotation
@@ -126,8 +126,6 @@ class TeleopManagerNode():
                 sound_msg.filepath = "Triskarino/triskarino_robot/src/triskarino_hw/resources/acknowledged.wav"
                 sound_msg.volume = VOLUME
                 publish_sound = True
-                
-
             else:
                 continue
         

@@ -17,7 +17,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 
-catkin_install_python(PROGRAMS ./scripts/debug_arduino.py ./scripts/speed_manager.py ./scripts/odom_manager.py ./scripts/camera_manager.py ./scripts/teleop_manager.py ./scripts/lights_manager.py ./scripts/sound_manager.py
+catkin_install_python(PROGRAMS ./scripts/debug_arduino.py ./scripts/debug_odometry.py ./scripts/speed_manager.py ./scripts/odom_manager.py ./scripts/camera_manager.py ./scripts/teleop_manager.py ./scripts/lights_manager.py ./scripts/sound_manager.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

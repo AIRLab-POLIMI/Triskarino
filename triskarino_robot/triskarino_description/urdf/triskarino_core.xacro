@@ -2,54 +2,76 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="triskarino">
 
 	<xacro:include filename="$(find triskarino_description)/urdf/rim.urdf.xacro"/>
-    <xacro:include filename="$(find triskarino_description)/urdf/base.xacro"/>
-    <xacro:include filename="$(find triskarino_description)/urdf/triskarino_top.xacro"/>
+    <xacro:include filename="$(find triskarino_description)/urdf/base.urdf.xacro"/>
+    <xacro:include filename="$(find triskarino_description)/urdf/triskarino_cylinder.xacro"/>
     <xacro:include filename="$(find triskarino_description)/urdf/materials.xacro"/>
     <xacro:include filename="$(find triskarino_description)/urdf/hokuyo.xacro"/>
     
-    <link name="origin_link"/>
+    <link name="base_link"/>
 	
     <!-- BASE PLATE -->
     <xacro:base 
-        xyz="0 0 0.01905"
-        scale="1 1 1"
-        rpy="0 3.14 -0.05"
+        xyz="0 0 0.1"
+        scale_factor="0.001"
+        rpy="0 3.14 0"
         />
+
+    
+    <joint name="base_footprint_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="base_footprint"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <link name="base_footprint"></link>
 
     <!-- LEFT WHEEL -->
 	<xacro:rim_macro
 		name="left"
 		color="0.3 0 0"
-		xyz="-0.1299038106 0.075 -0.02"
+		xyz="-0.142894191624 0.0825 -0.035"
 		rpy="1.570796326794896 0 1.047197551196597"
-        scale_factor="2.0"/>
+        />
 
     <!-- BACK WHEEL -->
 	<xacro:rim_macro
 		name="back"
 		color="0 0.3 0"
-		xyz="0 -0.15 -0.02"
+		xyz="0 -0.1650 -0.035"
 		rpy="1.570796326794896 0 3.141592653589793"
-        scale_factor="2.0"/>
+        />
     
     <!-- RIGHT WHEEL -->
 	<xacro:rim_macro
 		name="right"
 		color="0 0 0.3"
-		xyz="0.1299038106 0.075 -0.02"
+		xyz="0.142894191624 0.0825 -0.035"
 		rpy="1.570796326794896 0 -1.047197551196597"
-        scale_factor="2.0"/>
+        />
+    
+    <!-- CYLINDER USED AS AXIS FOR THE ROBOT, Z HAS TO BE ADJUSTED ACCORDING TO THE LENGTH OF THE AXIS -->
+    <xacro:cylinder
+        name="axis"
+        xyz="0 0 0.2"
+        rpy="0 0 0"
+        parent="plate_link"
+        color="grey"
+        radius="0.01"
+        length="0.4"
+        mass="1"
+        />
+    
     
     <!-- FIRST CYLINDER SET AT THE BASE OF THE LIDAR -->
-    <xacro:top 
+    <xacro:cylinder
         name="layer_0"
-        xyz="0 0 0.03"
+        xyz="0 0 -0.17"
         rpy="0 0 0"
-        parent="base_link"
+        parent="axis_link"
         color="grey"
         radius="0.2"
         length="0.01"
-        mass="0.001"
+        mass="1"
         />
     
     <xacro:hokuyo_ust10_mount 
@@ -60,37 +82,26 @@
     />
 
 
-    <!-- SECOND CYLINDER MAKING UP THE TOP OF THE ROBOT -->
-    <xacro:top 
-        name="layer_1"
-        xyz="0 0 0.31"
-        rpy="0 0 0"
-        parent="base_link"
-        color="blue"
-        radius="0.2"
-        length="0.4"
-        mass="0.01"
-        />
-
-	<gazebo reference="base_link">
+   
+	<gazebo reference="plate_link">
     		<material>Gazebo/White</material>
   	</gazebo>
 
-	<gazebo reference="rim_left_link">
-    		<material>Gazebo/Red</material>
+			
+    <gazebo reference="base_link">
+		<mu1 value="0.0"/>
+		<mu2 value="0.0"/>
   	</gazebo>
 
-	<gazebo reference="rim_back_link">
-    		<material>Gazebo/Green</material>
-  	</gazebo>
-
-	<gazebo reference="rim_right_link">
-    		<material>Gazebo/Blue</material>
-  	</gazebo>
 	<gazebo>
-		<plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-		<robotNamespace>/triskarino</robotNamespace>
-		</plugin>
-	</gazebo>
-	
+        <plugin name="triskarino_controller" filename="libgazebo_ros_planar_move.so">
+            <commandTopic>/cmd_vel</commandTopic>
+            <odometryTopic>/odom</odometryTopic>
+            <odometryFrame>/odom</odometryFrame>
+            <odometryRate>50.0</odometryRate>
+            <robotBaseFrame>base_link</robotBaseFrame>
+        </plugin>
+
+    </gazebo>
+
 </robot>

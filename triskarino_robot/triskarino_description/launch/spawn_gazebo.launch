@@ -1,11 +1,12 @@
 <launch>
-  <param name="robot_description" command="$(find xacro)/xacro '$(find triskarino_description)/urdf/triskarino.urdf.xacro'"/>
-  <param name="use_gui" value="True"/>
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"></node>
-  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
-    <param name="publish_frequency" type="double" value="30.0"/>
-    <!--param name="tf_prefix" type="string" value="" /-->
-  </node>
-  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model robot" />
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find triskarino_description)/worlds/triskarino_planar.world"/>
+    <arg name="verbose" value="true" />
+    <!-- more default parameters can be changed here -->
+  </include>
+  <param name="robot_description" command="$(find xacro)/xacro $(find triskarino_description)/urdf/triskarino.urdf.xacro" />
 
+  <!-- Spawn a robot into Gazebo -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model triskarino" />
 </launch>

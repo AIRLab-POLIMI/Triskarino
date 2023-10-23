@@ -1,0 +1,1928 @@
+<sdf version='1.7'>
+  <model name='triskarino'>
+    <link name='base_link'>
+      <inertial>
+        <pose>0 0.029512 8.36502 0 -0 0</pose>
+        <mass>4.1</mass>
+        <inertia>
+          <ixx>6939.61</ixx>
+          <ixy>2.09097e-10</ixy>
+          <ixz>0</ixz>
+          <iyy>6939.6</iyy>
+          <iyz>0.990704</iyz>
+          <izz>11631.8</izz>
+        </inertia>
+      </inertial>
+      <collision name='base_link_fixed_joint_lump__plate_link_collision'>
+        <pose>0 0 0.1 3.14159 0.001593 3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://triskarino_description/meshes/robot_base.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <collision name='base_link_fixed_joint_lump__axis_link_collision_1'>
+        <pose>0 0 0.3 0 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.4</length>
+            <radius>0.01</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='base_link_fixed_joint_lump__layer_0_link_collision_2'>
+        <pose>0 0 0.13 0 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.01</length>
+            <radius>0.2</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='base_link_fixed_joint_lump__plate_link_visual'>
+        <pose>0 0 0.1 3.14159 0.001593 3.14159</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>model://triskarino_description/meshes/robot_base.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/White</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <visual name='base_link_fixed_joint_lump__axis_link_visual_1'>
+        <pose>0 0 0.3 0 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.4</length>
+            <radius>0.01</radius>
+          </cylinder>
+        </geometry>
+      </visual>
+      <visual name='base_link_fixed_joint_lump__layer_0_link_visual_2'>
+        <pose>0 0 0.13 0 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.01</length>
+            <radius>0.2</radius>
+          </cylinder>
+        </geometry>
+      </visual>
+      <visual name='base_link_fixed_joint_lump__laser_mount_visual_3'>
+        <pose>0 0.11 0.13 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/hokuyo_ust10.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <script>
+            <name>Gazebo/DarkGrey</name>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+          </script>
+        </material>
+      </visual>
+      <gravity>0</gravity>
+      <sensor name='laser' type='ray'>
+        <visualize>1</visualize>
+        <update_rate>10</update_rate>
+        <ray>
+          <scan>
+            <horizontal>
+              <samples>720</samples>
+              <resolution>1</resolution>
+              <min_angle>-2.0944</min_angle>
+              <max_angle>2.0944</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.01</min>
+            <max>30</max>
+            <resolution>0.01</resolution>
+          </range>
+          <noise>
+            <type>gaussian</type>
+            <mean>0</mean>
+            <stddev>0.001</stddev>
+          </noise>
+        </ray>
+        <plugin name='laser_controller' filename='libgazebo_ros_laser.so'>
+          <tf_prefix/>
+          <frameName>laser</frameName>
+          <topicName>scan</topicName>
+          <robotNamespace>triskarino</robotNamespace>
+        </plugin>
+        <pose>0 0.11 0.1774 0 -0 1.5708</pose>
+      </sensor>
+    </link>
+    <joint name='rim_back_joint' type='revolute'>
+      <pose relative_to='base_link'>0 -0.165 0.065 1.5708 -0 3.14159</pose>
+      <parent>base_link</parent>
+      <child>rim_back_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='rim_back_link'>
+      <pose relative_to='rim_back_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-4e-06 -3e-06 -0.000118 0 -0 0</pose>
+        <mass>0.2</mass>
+        <inertia>
+          <ixx>5.62e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>5.62e-05</iyy>
+          <iyz>0</iyz>
+          <izz>7.735e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='rim_back_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.02</length>
+            <radius>0.032</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>1e-05</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+              <fdir1>0 0 1</fdir1>
+              <slip1>1</slip1>
+              <slip2>1</slip2>
+              <max_contacts>2</max_contacts>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='rim_back_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/rim_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_e_rim_back_link_joint' type='revolute'>
+      <pose relative_to='rim_back_link'>0.01355 0 0.0055 -1.5708 0 0</pose>
+      <parent>rim_back_link</parent>
+      <child>roller_e_rim_back_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_e_rim_back_link_link'>
+      <pose relative_to='roller_e_rim_back_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_e_rim_back_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_e_rim_back_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_n_rim_back_link_joint' type='revolute'>
+      <pose relative_to='rim_back_link'>0 0.01355 0.0055 -1.5708 0 1.5708</pose>
+      <parent>rim_back_link</parent>
+      <child>roller_n_rim_back_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_n_rim_back_link_link'>
+      <pose relative_to='roller_n_rim_back_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_n_rim_back_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_n_rim_back_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_ne_rim_back_link_joint' type='revolute'>
+      <pose relative_to='rim_back_link'>0.009581 0.009581 -0.0055 -1.5708 -0 0.785398</pose>
+      <parent>rim_back_link</parent>
+      <child>roller_ne_rim_back_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_ne_rim_back_link_link'>
+      <pose relative_to='roller_ne_rim_back_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_ne_rim_back_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_ne_rim_back_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_nw_rim_back_link_joint' type='revolute'>
+      <pose relative_to='rim_back_link'>-0.009581 0.009581 -0.0055 -1.5708 0 2.35619</pose>
+      <parent>rim_back_link</parent>
+      <child>roller_nw_rim_back_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_nw_rim_back_link_link'>
+      <pose relative_to='roller_nw_rim_back_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_nw_rim_back_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_nw_rim_back_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_s_rim_back_link_joint' type='revolute'>
+      <pose relative_to='rim_back_link'>0 -0.01355 0.0055 -1.5708 -0 -1.5708</pose>
+      <parent>rim_back_link</parent>
+      <child>roller_s_rim_back_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_s_rim_back_link_link'>
+      <pose relative_to='roller_s_rim_back_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_s_rim_back_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_s_rim_back_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_se_rim_back_link_joint' type='revolute'>
+      <pose relative_to='rim_back_link'>0.009581 -0.009581 -0.0055 -1.5708 0 -0.785398</pose>
+      <parent>rim_back_link</parent>
+      <child>roller_se_rim_back_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_se_rim_back_link_link'>
+      <pose relative_to='roller_se_rim_back_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_se_rim_back_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_se_rim_back_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_sw_rim_back_link_joint' type='revolute'>
+      <pose relative_to='rim_back_link'>-0.009581 -0.009581 -0.0055 -1.5708 -0 -2.35619</pose>
+      <parent>rim_back_link</parent>
+      <child>roller_sw_rim_back_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_sw_rim_back_link_link'>
+      <pose relative_to='roller_sw_rim_back_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_sw_rim_back_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_sw_rim_back_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_w_rim_back_link_joint' type='revolute'>
+      <pose relative_to='rim_back_link'>-0.01355 0 0.0055 -1.5708 -0 3.14159</pose>
+      <parent>rim_back_link</parent>
+      <child>roller_w_rim_back_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_w_rim_back_link_link'>
+      <pose relative_to='roller_w_rim_back_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_w_rim_back_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_w_rim_back_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='rim_left_joint' type='revolute'>
+      <pose relative_to='base_link'>-0.142894 0.0825 0.065 1.5708 0 1.0472</pose>
+      <parent>base_link</parent>
+      <child>rim_left_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='rim_left_link'>
+      <pose relative_to='rim_left_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-4e-06 -3e-06 -0.000118 0 -0 0</pose>
+        <mass>0.2</mass>
+        <inertia>
+          <ixx>5.62e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>5.62e-05</iyy>
+          <iyz>0</iyz>
+          <izz>7.735e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='rim_left_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.02</length>
+            <radius>0.032</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>1e-05</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+              <fdir1>0 0 1</fdir1>
+              <slip1>1</slip1>
+              <slip2>1</slip2>
+              <max_contacts>2</max_contacts>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='rim_left_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/rim_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_e_rim_left_link_joint' type='revolute'>
+      <pose relative_to='rim_left_link'>0.01355 0 0.0055 -1.5708 0 0</pose>
+      <parent>rim_left_link</parent>
+      <child>roller_e_rim_left_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_e_rim_left_link_link'>
+      <pose relative_to='roller_e_rim_left_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_e_rim_left_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_e_rim_left_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_n_rim_left_link_joint' type='revolute'>
+      <pose relative_to='rim_left_link'>0 0.01355 0.0055 -1.5708 0 1.5708</pose>
+      <parent>rim_left_link</parent>
+      <child>roller_n_rim_left_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_n_rim_left_link_link'>
+      <pose relative_to='roller_n_rim_left_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_n_rim_left_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_n_rim_left_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_ne_rim_left_link_joint' type='revolute'>
+      <pose relative_to='rim_left_link'>0.009581 0.009581 -0.0055 -1.5708 -0 0.785398</pose>
+      <parent>rim_left_link</parent>
+      <child>roller_ne_rim_left_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_ne_rim_left_link_link'>
+      <pose relative_to='roller_ne_rim_left_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_ne_rim_left_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_ne_rim_left_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_nw_rim_left_link_joint' type='revolute'>
+      <pose relative_to='rim_left_link'>-0.009581 0.009581 -0.0055 -1.5708 0 2.35619</pose>
+      <parent>rim_left_link</parent>
+      <child>roller_nw_rim_left_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_nw_rim_left_link_link'>
+      <pose relative_to='roller_nw_rim_left_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_nw_rim_left_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_nw_rim_left_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_s_rim_left_link_joint' type='revolute'>
+      <pose relative_to='rim_left_link'>0 -0.01355 0.0055 -1.5708 -0 -1.5708</pose>
+      <parent>rim_left_link</parent>
+      <child>roller_s_rim_left_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_s_rim_left_link_link'>
+      <pose relative_to='roller_s_rim_left_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_s_rim_left_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_s_rim_left_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_se_rim_left_link_joint' type='revolute'>
+      <pose relative_to='rim_left_link'>0.009581 -0.009581 -0.0055 -1.5708 0 -0.785398</pose>
+      <parent>rim_left_link</parent>
+      <child>roller_se_rim_left_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_se_rim_left_link_link'>
+      <pose relative_to='roller_se_rim_left_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_se_rim_left_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_se_rim_left_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_sw_rim_left_link_joint' type='revolute'>
+      <pose relative_to='rim_left_link'>-0.009581 -0.009581 -0.0055 -1.5708 -0 -2.35619</pose>
+      <parent>rim_left_link</parent>
+      <child>roller_sw_rim_left_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_sw_rim_left_link_link'>
+      <pose relative_to='roller_sw_rim_left_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_sw_rim_left_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_sw_rim_left_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_w_rim_left_link_joint' type='revolute'>
+      <pose relative_to='rim_left_link'>-0.01355 0 0.0055 -1.5708 -0 3.14159</pose>
+      <parent>rim_left_link</parent>
+      <child>roller_w_rim_left_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_w_rim_left_link_link'>
+      <pose relative_to='roller_w_rim_left_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_w_rim_left_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_w_rim_left_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='rim_right_joint' type='revolute'>
+      <pose relative_to='base_link'>0.142894 0.0825 0.065 1.5708 -0 -1.0472</pose>
+      <parent>base_link</parent>
+      <child>rim_right_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='rim_right_link'>
+      <pose relative_to='rim_right_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>-4e-06 -3e-06 -0.000118 0 -0 0</pose>
+        <mass>0.2</mass>
+        <inertia>
+          <ixx>5.62e-05</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>5.62e-05</iyy>
+          <iyz>0</iyz>
+          <izz>7.735e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='rim_right_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.02</length>
+            <radius>0.032</radius>
+          </cylinder>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>1e-05</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+              <fdir1>0 0 1</fdir1>
+              <slip1>1</slip1>
+              <slip2>1</slip2>
+              <max_contacts>2</max_contacts>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+      <visual name='rim_right_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/rim_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_e_rim_right_link_joint' type='revolute'>
+      <pose relative_to='rim_right_link'>0.01355 0 0.0055 -1.5708 0 0</pose>
+      <parent>rim_right_link</parent>
+      <child>roller_e_rim_right_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_e_rim_right_link_link'>
+      <pose relative_to='roller_e_rim_right_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_e_rim_right_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_e_rim_right_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_n_rim_right_link_joint' type='revolute'>
+      <pose relative_to='rim_right_link'>0 0.01355 0.0055 -1.5708 0 1.5708</pose>
+      <parent>rim_right_link</parent>
+      <child>roller_n_rim_right_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_n_rim_right_link_link'>
+      <pose relative_to='roller_n_rim_right_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_n_rim_right_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_n_rim_right_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_ne_rim_right_link_joint' type='revolute'>
+      <pose relative_to='rim_right_link'>0.009581 0.009581 -0.0055 -1.5708 -0 0.785398</pose>
+      <parent>rim_right_link</parent>
+      <child>roller_ne_rim_right_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_ne_rim_right_link_link'>
+      <pose relative_to='roller_ne_rim_right_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_ne_rim_right_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_ne_rim_right_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_nw_rim_right_link_joint' type='revolute'>
+      <pose relative_to='rim_right_link'>-0.009581 0.009581 -0.0055 -1.5708 0 2.35619</pose>
+      <parent>rim_right_link</parent>
+      <child>roller_nw_rim_right_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_nw_rim_right_link_link'>
+      <pose relative_to='roller_nw_rim_right_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_nw_rim_right_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_nw_rim_right_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_s_rim_right_link_joint' type='revolute'>
+      <pose relative_to='rim_right_link'>0 -0.01355 0.0055 -1.5708 -0 -1.5708</pose>
+      <parent>rim_right_link</parent>
+      <child>roller_s_rim_right_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_s_rim_right_link_link'>
+      <pose relative_to='roller_s_rim_right_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_s_rim_right_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_s_rim_right_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_se_rim_right_link_joint' type='revolute'>
+      <pose relative_to='rim_right_link'>0.009581 -0.009581 -0.0055 -1.5708 0 -0.785398</pose>
+      <parent>rim_right_link</parent>
+      <child>roller_se_rim_right_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_se_rim_right_link_link'>
+      <pose relative_to='roller_se_rim_right_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_se_rim_right_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_se_rim_right_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_sw_rim_right_link_joint' type='revolute'>
+      <pose relative_to='rim_right_link'>-0.009581 -0.009581 -0.0055 -1.5708 -0 -2.35619</pose>
+      <parent>rim_right_link</parent>
+      <child>roller_sw_rim_right_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_sw_rim_right_link_link'>
+      <pose relative_to='roller_sw_rim_right_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_sw_rim_right_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_sw_rim_right_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <joint name='roller_w_rim_right_link_joint' type='revolute'>
+      <pose relative_to='rim_right_link'>-0.01355 0 0.0055 -1.5708 -0 3.14159</pose>
+      <parent>rim_right_link</parent>
+      <child>roller_w_rim_right_link_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1e+16</lower>
+          <upper>1e+16</upper>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='roller_w_rim_right_link_link'>
+      <pose relative_to='roller_w_rim_right_link_joint'>0 0 0 0 -0 0</pose>
+      <inertial>
+        <pose>0 0 -0 0 -0 0</pose>
+        <mass>0.05</mass>
+        <inertia>
+          <ixx>3.28e-06</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>3.28e-06</iyy>
+          <iyz>0</iyz>
+          <izz>1.91e-06</izz>
+        </inertia>
+      </inertial>
+      <collision name='roller_w_rim_right_link_link_collision'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+        <surface>
+          <contact>
+            <ode>
+              <kp>1e+06</kp>
+              <kd>1</kd>
+              <min_depth>0.001</min_depth>
+            </ode>
+          </contact>
+          <friction>
+            <ode>
+              <mu>0</mu>
+              <mu2>0</mu2>
+            </ode>
+          </friction>
+        </surface>
+        <max_contacts>0</max_contacts>
+      </collision>
+      <visual name='roller_w_rim_right_link_link_visual'>
+        <pose>0 0 0 0 -0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>model://triskarino_description/meshes/roller_scaled.stl</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <frame name='base_footprint_joint' attached_to='base_link'>
+      <pose>0 0 0 0 -0 0</pose>
+    </frame>
+    <frame name='base_footprint' attached_to='base_footprint_joint'/>
+    <frame name='laser_joint' attached_to='laser_mount'>
+      <pose>0 0 0.0474 0 -0 0</pose>
+    </frame>
+    <frame name='laser' attached_to='laser_joint'/>
+    <frame name='laser_mount_joint' attached_to='layer_0_link'>
+      <pose>0 0.11 0 0 -0 1.5708</pose>
+    </frame>
+    <frame name='laser_mount' attached_to='laser_mount_joint'/>
+    <frame name='layer_0_joint' attached_to='axis_link'>
+      <pose>0 0 -0.17 0 -0 0</pose>
+    </frame>
+    <frame name='layer_0_link' attached_to='layer_0_joint'/>
+    <frame name='axis_joint' attached_to='plate_link'>
+      <pose>0 0 0.2 0 -0 0</pose>
+    </frame>
+    <frame name='axis_link' attached_to='axis_joint'/>
+    <frame name='plate_joint' attached_to='base_link'>
+      <pose>0 0 0.1 0 -0 0</pose>
+    </frame>
+    <frame name='plate_link' attached_to='plate_joint'/>
+  </model>
+</sdf>

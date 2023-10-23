@@ -1,0 +1,7 @@
+<launch>
+
+  <node pkg="triskarino_hw" type="debug_arduino.py" name="debugArduino" output="screen" />
+  <node pkg="triskarino_hw" type="debug_odometry.py" name="debugOdometry" output="screen" />
+  <node pkg="triskarino_hw" type="debug_teleop.py" name="debugTeleop" output="screen" />
+  
+</launch>

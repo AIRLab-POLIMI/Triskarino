@@ -1,0 +1,16 @@
+<launch>
+    <master auto="start"/>
+    <param name="use_sim_time" value="true"/>
+    <include file="$(find triskarino_description)/launch/spawn_gazebo.launch"/>
+    <include file="$(find triskarino_description)/launch/state_publisher.launch"/>
+
+    <include file="$(find triskarino_description)/launch/rviz_navigation.launch"/>
+    
+    <node name="teleop_node" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" output="screen" launch-prefix="gnome-terminal --command" />
+
+    <node pkg="gmapping" type="slam_gmapping" name="gmapping_node" output="screen" >
+        <rosparam command="load" file="$(find triskarino_navigation)/params/gmapping_simulation.yaml" />
+        <remap from="scan" to="triskarino/scan" />
+    </node>
+    
+</launch>

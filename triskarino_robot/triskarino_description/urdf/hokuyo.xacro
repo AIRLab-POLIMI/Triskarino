@@ -2,9 +2,9 @@
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="hokuyo_ust10_mount" params="topic parent_link min_angle:=-2.0944 max_angle:=2.0944 xyz rpy">
 
-    <xacro:macro name="hokuyo_ust10" params="frame:=laser topic:=scan sample_size:=720 update_rate:=50
-               min_angle:=${min_angle} max_angle:=${max_angle} min_range:=0.01 max_range:=30 robot_namespace:=triskarino/">
-      <link name="${frame}">
+    <xacro:macro name="hokuyo_ust10" params="frame:=laser topic:=scan sample_size:=720 update_rate:=10.0
+               min_angle:=${min_angle} max_angle:=${max_angle} min_range:=0.01 max_range:=30 robot_namespace:=triskarino ">
+      <link name="laser">
         <inertial>
           <mass value="1.1" />
           <origin xyz="0 0 0" />
@@ -14,7 +14,7 @@
         </inertial>
       </link>
 
-      <gazebo reference="${frame}">
+      <gazebo reference="laser">
         <turnGravityOff>true</turnGravityOff>
         <sensor type="ray" name="${frame}">
           <pose>0 0 0 0 0 0</pose>
@@ -40,12 +40,12 @@
               <stddev>0.001</stddev>
             </noise>
           </ray>
-          <plugin name="laser_controller" filename="libgazebo_ros_ray_sensor.so">
-            <ros>
-                <argument>~/out:=scan</argument>
-            </ros>
-            <output_type>sensor_msgs/LaserScan</output_type>
-            <frame_name>laser</frame_name>
+          <plugin name="laser_controller" filename="libgazebo_ros_laser.so">
+            <tf_prefix></tf_prefix>
+            <frameName>${frame}</frameName>
+            <topicName>${topic}</topicName>
+            <robotNamespace>triskarino</robotNamespace>
+
           </plugin>
         </sensor>
       </gazebo>
@@ -64,7 +64,7 @@
         <origin xyz="0 0 0" rpy="0 0 0" />
         <geometry>
           <!-- Origin of this mesh is the base of the bracket. -->
-          <mesh filename="package://urg_node/meshes/hokuyo_ust10.stl" />
+          <mesh filename="package://triskarino_description/meshes/hokuyo_ust10.stl" />
         </geometry>
         <material name="dark_grey" />
       </visual>
@@ -76,6 +76,8 @@
       <parent link="laser_mount" />
       <child link="laser" />
     </joint>
+
+    <!-- Fix to make rviz laserscan work! -->
 
     <gazebo reference="laser_mount">
       <material>Gazebo/DarkGrey</material>

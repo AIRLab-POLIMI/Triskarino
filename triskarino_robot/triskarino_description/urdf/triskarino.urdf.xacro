@@ -2,4 +2,5 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro"  name="triskarino">
 
     <xacro:include filename="triskarino_core.xacro" />
+
 </robot>

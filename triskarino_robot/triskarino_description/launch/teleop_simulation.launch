@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="triskarino_hw" type="speed_manager.py" name="speed_manager" output="screen" />
+    <node pkg="triskarino_hw" type="teleop_manager.py" name="teleop_manager" output="screen" />
+  
+  </launch>

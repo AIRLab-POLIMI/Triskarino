@@ -1,0 +1,34 @@
+<launch>
+
+    <master auto="start"/>
+
+    <include file="$(find triskarino_hw)/launch/lidar.launch"/>
+    <include file="$(find triskarino_hw)/launch/teleop.launch"/>
+    <include file="$(find triskarino_hw)/launch/twist_mux.launch"/>
+
+    <!-- Run the map server --> 
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find triskarino_navigation)/maps/lab_map.yaml"/>
+
+    <include file="$(find triskarino_description)/launch/state_publisher.launch"/>
+
+    <!--- Run AMCL --> 
+    <node pkg="amcl" type="amcl" name="amcl">
+        <rosparam file="$(find triskarino_navigation)/params/amcl.yaml" command="load"/> 
+    </node>
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find triskarino_navigation)/params/costmap_common_params.yaml" command="load" ns="global_costmap" /> 
+    <rosparam file="$(find triskarino_navigation)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find triskarino_navigation)/params/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find triskarino_navigation)/params/global_costmap_params.yaml" command="load" /> 
+    <rosparam file="$(find triskarino_navigation)/params/base_local_planner_params.yaml" command="load" />
+    </node>
+    <!--Run RViz on remote machine-->
+    <group>
+        <machine default="true">
+            <rosparam file="$(find triskarino_navigation)/params/remote_machine.yaml" command="load" />
+        </machine>
+        <include file="$(find triskarino_description)/launch/rviz_navigation.launch"/>
+    </group>
+
+
+</launch>   
