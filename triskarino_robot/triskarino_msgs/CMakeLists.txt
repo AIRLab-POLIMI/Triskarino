@@ -20,6 +20,7 @@ add_message_files(
   Light.msg
   Sound.msg
   RawOdometry.msg
+  touchdata.msg
 )
 
 generate_messages(
