@@ -11,6 +11,7 @@
 */
 
 #include "ViRHas.h"
+#include <math.h>
 
 
 ViRHaS::ViRHaS(CytronMD & m1, CytronMD & m2,CytronMD & m3, Encoder & e1, Encoder & e2, Encoder & e3)
@@ -27,6 +28,10 @@ ViRHaS::ViRHaS(CytronMD & m1, CytronMD & m2,CytronMD & m3, Encoder & e1, Encoder
    speedX=0;
    speedY=0;
    speedTh=0;
+   //Last Setpoint stored to have integral part not take action when setpoint changes
+   lastSP[0] = 0.0;
+   lastSP[1]= 0.0;
+   lastSP[2] = 0.0;
   //Setpoint speed, calculated in run2 function
    speed_req[0] = 0.0;                      
    speed_req[1] = 0.0;
@@ -98,6 +103,7 @@ void ViRHaS::PIDLoop(char* debug_msg_static){
 
 //Writes in the debug string the setpoint and actual speed to allow for PID Tuning
 void ViRHaS::writeDebugInfo(char* debug_msg_static){
+  int new_lenght = 0;
   debug_msg_static[0]='(';
   dtostrf(speed_req[0],3,2, &debug_msg_static[1]);
   debug_msg_static[4] = ',';
@@ -140,21 +146,6 @@ void ViRHaS::stop(void){
 }
 
 
-void ViRHaS::runM(float m1, float m2, float m3){
-    // Motor setpoints
-  speed_req[0] = m1;
-  speed_req[1] = m2;
-  speed_req[2] = m3;
-}
-void ViRHaS::setM1Speed(float m1){
-   speed_req[0] = m1;
-}
-void ViRHaS::setM2Speed(float m2){
-  speed_req[1] = m2;
-}
-void ViRHaS::setM3Speed(float m3){
-  speed_req[2] = m3;
-}
 
 //determina velocità in cm/s
 void ViRHaS::direct_kinematics(void){
@@ -166,13 +157,18 @@ void ViRHaS::direct_kinematics(void){
 }
 
 void ViRHaS::makeOdometry(unsigned long int deltaT){
+  double delta_th = speedTh * (deltaT/1000.0);
   double delta_x = (speedX * cos(posTh) - speedY * sin(posTh)) * (deltaT/1000.0);
   double delta_y = (speedX * sin(posTh) + speedY * cos(posTh)) * (deltaT/1000.0);
-  double delta_th = speedTh * (deltaT/1000.0);
+
+  
 
   posX+=delta_x;
   posY+=delta_y;
   posTh+=delta_th;
+  
+  posTh = fmod(posTh,(float)M_PI);
+
 
 
 }
@@ -181,25 +177,35 @@ void ViRHaS::makeOdometry(unsigned long int deltaT){
 int ViRHaS::updatePid(double targetValue, double currentValue, int i)   {// compute PWM value
   double pidTerm =0;                                                            // PID correction
   double error=0;
+  if (lastSP[i] != targetValue){
+    Iterm[i] = 0;
+  }
   error = targetValue - currentValue;
   Iterm[i] += error*Ki;
-  if(Iterm[i]>255) Iterm[i]=255;
-  else if(Iterm[i]<-255) Iterm[i]=-255;
-  double deltaError = error - last_error[i];
+  double deltaError = last_error[i] - error;
   pidTerm = (Kp * error) + (Iterm[i]) + (Kd * deltaError);
   last_error[i] = error;
-  int output=constrain(int(pidTerm), -255, 255);
-  return output;
+  lastSP[i] = targetValue;
+  return constrain(int(pidTerm), -255, 255);
 }
 
 
 void ViRHaS::getMotorCmS(long deltaT,int pos,int i)  {                                                        // calculate speed, volts and Amps
-//Trusting the use of 1920 as PPR (pulses per revolution)
 // (Delta Pos * Distance per 1 pulse) / Delta Time
-speed_act[i] = ((pos - countAnt[i]) * ((2.0f*(float)M_PI*wheel_radius)/1920.0f)) / (deltaT/1000.0f);     // 16 pulses X 29 gear ratio = 464 counts per output shaft rev
+speed_act[i] = ((pos - countAnt[i]) * ((2.0f*(float)M_PI)/encoder_ppr)) / (deltaT/1000.0f);    
 countAnt[i] = pos;
 }
 
+void ViRHaS::setEncoderPPR(float ppr){
+  encoder_ppr = ppr;
+}
+
+void ViRHaS::setWheelRadius(float radius){
+  wheel_radius = radius;
+}
+void ViRHaS::setRobotRadius(float radius){
+  robot_radius = radius;
+}
 
 double ViRHaS::getPosX(){
   return posX;
@@ -231,17 +237,7 @@ void ViRHaS::setPosTh(double _posTh){
   posTh=_posTh;
 }
 
-void ViRHaS::setIterm(int i, double val){
-  Iterm[i]=val;
-}
 
-void ViRHaS::setKp(double val){
-  Kp=val;
-}
-
-void ViRHaS::setKi(double val){
-  Ki=val;
-}
 
 void ViRHaS::setKpid(double val, double val1, double val2){
   Kp=val;
@@ -249,11 +245,3 @@ void ViRHaS::setKpid(double val, double val1, double val2){
   Kd=val2;
 }
 
-
-void ViRHaS::resetKp(){
-  Kp=KP;
-}
-
-void ViRHaS::resetKi(){
-  Ki=KI;
-}

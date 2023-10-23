@@ -36,6 +36,7 @@ private:
   int PWM_val[3];                                // (25% = 64; 50% = 127; 75% = 191; 100% = 255)
   double last_error[3];
   double Iterm[3];
+  double lastSP[3];
   float Kp;
   float Ki;
   float Kd;
@@ -45,6 +46,10 @@ private:
   double speedX;
   double speedY;
   double speedTh;
+
+  float wheel_radius;
+  float robot_radius;
+  float encoder_ppr;
 
   unsigned long lastMilliLoop;
   unsigned long lastMillis[3];
@@ -69,10 +74,7 @@ public:
   ViRHaS(CytronMD & m1,CytronMD & m2, CytronMD & m3,
       Encoder & e1, Encoder & e2, Encoder & e3);
   void run2(float strafe, float forward, float angular);
-  void runM(float m1, float m2, float m3);
-  void setM1Speed(float m1);
-  void setM2Speed(float m2);
-  void setM3Speed(float m3);
+  
 
   void PIDLoop(char* debug_msg_static);
 
@@ -88,13 +90,10 @@ public:
   void setPosY(double _posY);
   void setPosTh(double _posTh);
 
-  void setIterm(int i, double val);
 
-  void setKp(double val);
-  void resetKp();
-
-  void setKi(double val);
-  void resetKi();
+  void setWheelRadius(float radius);
+  void setRobotRadius(float radius);
+  void setEncoderPPR(float ppr);
     
   void setKpid(double val, double val1, double val2);
 

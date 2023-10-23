@@ -1,7 +1,7 @@
 #include <NewPing.h>
 #include <CytronMotorDriver.h>
 #include <Encoder.h>
-#include <ViRHas2.0.h>
+#include <ViRHas.h>
 #include <ros.h>
 #include <triskarino_msgs/RawOdometry.h>
 #include <triskarino_msgs/Sonar.h>
@@ -35,11 +35,11 @@ const int echoPin = 30;
 const int trigPin1 = 28;
 const int echoPin1 = 26;
 
-const int trigPin2 = 38;
-const int echoPin2 = 36;
+const int trigPin2 = 36;
+const int echoPin2 = 34;
 
-const int trigPin3 = 44;
-const int echoPin3 = 42;
+const int trigPin3 = 24;
+const int echoPin3 = 22;
 
 NewPing sonar[SONAR_NUM] = {
   NewPing(trigPin2, echoPin2, MAX_DISTANCE), //Front sonar
@@ -52,12 +52,12 @@ NewPing sonar[SONAR_NUM] = {
 
 //MOTORS 
 //input pins
-#define _EP11 19
-#define _EP12 18
+#define _EP11 2
+#define _EP12 3
 #define _EP31 21
 #define _EP32 20
-#define _EP21 2
-#define _EP22 3
+#define _EP21 19
+#define _EP22 18
 
 //driver pins
 #define _1_1A 8
@@ -71,12 +71,12 @@ NewPing sonar[SONAR_NUM] = {
 #define _MAX_SPEED 100 //cm/s
 #define _MAX_ANGULAR 6.28//rad/s
 #define wheel_radius  3.0f //cm
-#define robot_radius  15.0f  //cm
-#define encoder_ppr 4096.0f 
+#define robot_radius  16.5f  //cm
+#define encoder_ppr 1920.0f 
 
 // Configure the motor driver.
-CytronMD motor1(PWM_PWM, _1_1A, _1_1B); // PWM 2A = Pin 8, PWM 2B = Pin 7. Motor 1 : right robot
-CytronMD motor2(PWM_PWM, _2_1A, _2_1B);   // PWM 1A = Pin 12, PWM 1B = Pin 11. Motor 2 : Atras
+CytronMD motor1(PWM_PWM, _2_1A, _2_1B);   // PWM 1A = Pin 12, PWM 1B = Pin 11. Motor 1 : Atras
+CytronMD motor2(PWM_PWM, _1_1A, _1_1B); // PWM 2A = Pin 8, PWM 2B = Pin 7. Motor 2 : right robot
 CytronMD motor3(PWM_PWM, _1_2A, _1_2B); // PWM 2A = Pin 5, PWM 2B = Pin 4. Motor 3 : left robot
 
 //enable the encoders and set each eancoder of each sensor to which pin is connectes. take into coount that the
@@ -115,8 +115,7 @@ ros::Subscriber<geometry_msgs::Twist> twistSub("cmd_vel", &moveRobot );
 
 
 void setup() {
-  virhas.setKpid_th(5,1.25,0.7);
-  virhas.setKpid_xy(5,4,0.7);
+  virhas.setKpid(11.5,3.4,1.6);
   virhas.setWheelRadius(wheel_radius);
   virhas.setEncoderPPR(encoder_ppr);
   virhas.setRobotRadius(robot_radius);

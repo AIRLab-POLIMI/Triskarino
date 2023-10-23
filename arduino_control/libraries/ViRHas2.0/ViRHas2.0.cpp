@@ -203,9 +203,10 @@ int ViRHaS::updatePid(double targetValue, double currentValue, int i)   {// comp
   }
   error = targetValue - currentValue;
   Iterm[i] += error*Ki;
-  double deltaError = error - last_error[i];
+  double deltaError = last_error[i] - error;
   pidTerm = (Kp * error) + (Iterm[i]) + (Kd * deltaError);
   last_error[i] = error;
+  lastSP[i] = targetValue;
   return pidTerm;
 }
 
