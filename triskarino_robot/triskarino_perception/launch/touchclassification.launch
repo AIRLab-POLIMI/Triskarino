@@ -1,0 +1,40 @@
+<launch>
+    
+    <!-- Start rosserial-->
+    <node pkg="rosserial_python" type="serial_node.py" name="ArduinoTouchArray" output="screen">
+	<rosparam command="load" file="$(find triskarino_hw)/config/touch_mega.yaml" />
+    </node>
+
+    <!-- Start rosserial-->
+    <node pkg="rosserial_python" type="serial_node.py" name="ArduinoTouchHead" output="screen">
+	<rosparam command="load" file="$(find triskarino_hw)/config/touch_param.yaml" />
+    </node>
+
+    <!-- Start rosserial: Light-->
+    <node pkg="rosserial_python" type="serial_node.py" name="arduin4light" output="screen">
+      <param name="port" type="string" value="/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"/>
+      <param name="baud" type="int" value="115200"/>
+    </node>
+
+
+
+    <!-- Start ROS Servers-->
+    <node pkg="triskarino_perception" type="dynamic_detector_server.py" name="dynamic_detector_server" output="screen" />
+    <node pkg="triskarino_perception" type="static_classifier_server.py" name="static_classifier_server" output="screen" />
+
+
+    <!-- Start ROS node for Touch Data Classification-->
+    <node pkg="triskarino_perception" type="touchclassifier_manager.py" name="touchclassifier_manager" output="screen" />
+   
+
+    <!-- IMU -->
+    <include file="$(find mpu6050_driver)/launch/mpu6050_driver_with_filter.launch" />
+    
+    <!-- Joystick-->
+    <include file="$(find triskarino_hw)/launch/teleop.launch" />
+
+    <!-- Inlcude Sound --> 
+    <node pkg="triskarino_hw" type="sound_manager.py" name="sound_manager" output="screen" />
+
+   
+</launch>

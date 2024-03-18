@@ -1,0 +1,6 @@
+std_msgs/float32[] Pressure
+std_msgs/float32[] FlexSx
+std_msgs/float32[] FlexDx
+std_msgs/float32[] Time
+---
+std_msgs/String Label
