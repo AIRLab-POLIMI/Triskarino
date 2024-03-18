@@ -1,12 +1,12 @@
 /*
-This code is used to control the light of the robot. It uses the Adafruit_NeoPixel library to control the LED strip.
+* This code is used to control the light of the robot. It uses the Adafruit_NeoPixel library to control the LED strip.
 
-You can set the color of the light, the brightness, and the delay between the color changes. The light can be set to blink, fade, or show a rainbow of colors.
-The ROS message is defined in the triskarino_msgs package and it is called Light. The message contains the following fields:
-- string action: the command to control the light (e.g., "Start", "RB", "A", "B", "Y", "X", "Null")
-- uint8[3] color: the RGB color of the light
-- uint8 brightness: the brightness of the light (0-255)
-- uint16 delay: the delay between color changes in milliseconds
+* You can set the color of the light, the brightness, and the delay between the color changes. The light can be set to blink, fade, or show a rainbow of colors.
+* The ROS message is defined in the triskarino_msgs package and it is called Light. The message contains the following fields:
+* - string action: the command to control the light (e.g., "Start", "RB", "A", "B", "Y", "X", "Null")
+* - uint8[3] color: the RGB color of the light
+*- uint8 brightness: the brightness of the light (0-255)
+*-  uint16 delay: the delay between color changes in milliseconds
 
 */
 

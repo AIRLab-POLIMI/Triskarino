@@ -1,9 +1,8 @@
 /*
-This code is used to read the data from the pressure sensor and the flex sensors and publish them to the ROS network.
+The code is used to read the data from the pressure sensor and the flex sensors and publish them to the ROS network.
 It is similar to the ArduinoTouchArray.ino code, but it publishes the data from the head sensors to the ROS network.
 
 NOTE: no calibration is performed in this code, so the data is raw and not calibrated.
-
 */
 
 
