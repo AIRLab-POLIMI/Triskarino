@@ -1,0 +1,6 @@
+Sistema di interpretazione del tocco
+
+Lettura dei dati
+Per poter leggere i dati e salvali in formato csv basta utilizzare il launch file presente in triskarino_hw "touchreader.launch"
+In questo modo verranno salvati i dati dei 6 sensori di pressione, dei 12 sensori di flessione, della IMU e degli input del Gamepad.
+In particolare si leggono i topic touch_data_array, touch_data_head, cmd_vel_out_filled, imu/data_filtered  
