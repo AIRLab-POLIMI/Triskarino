@@ -24,4 +24,5 @@ Le modifiche possono essere fatte tramite gamepad oppure utilizzando il file 'My
 
 L'interazione di suoni prevede la semplice chiamata di un comando sulla shell.
 Viene utilizzato un nodo a parte (sound_manager) per la gestione di questo comando. Il nodo era già presente e non è stato toccato, ma si può benissimo evitare l'utilizzo.
-I souni sono salvati nella cartella resources
+I souni sono salvati nella cartella resources.
+Ci potrebbe essere un problema legato alla disponibilità della porta seriale. Spesso il suono non funziona. Per farlo funzionare basta staccare e riattaccare il cavo USB MENTRE il nodo è attivo.
