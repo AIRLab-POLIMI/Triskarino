@@ -26,3 +26,27 @@ L'interazione di suoni prevede la semplice chiamata di un comando sulla shell.
 Viene utilizzato un nodo a parte (sound_manager) per la gestione di questo comando. Il nodo era già presente e non è stato toccato, ma si può benissimo evitare l'utilizzo.
 I souni sono salvati nella cartella resources.
 Ci potrebbe essere un problema legato alla disponibilità della porta seriale. Spesso il suono non funziona. Per farlo funzionare basta staccare e riattaccare il cavo USB MENTRE il nodo è attivo.
+
+
+PIN ARDUINO (aggiornato: 22/03/2024)
+Arduino Uno:
+A0 : pressione della testa
+A1 : flessione anteriore della testa
+A2 : flessione posteriore della testa
+
+Arduino Mega:
+A0 : pressione patch 1
+A1 : pressione patch 0
+A2 : pressione patch 2
+A3 : flessione dx patch 4
+A4 : flessione dx patch 3
+A5 : flessione dx patch 0
+A6 : flessione dx patch 2
+A7 : flessione sx patch 3
+A8 : flessione sx patch 2
+A9 : flessione sx patch 4
+A10 : flessione sx patch 1
+A11 : pressione patch 4
+A12 : flessione sx patch 0
+A13 : flessione dx patch 1
+A15 : pressione patch 3
