@@ -1,0 +1,7 @@
+<launch>
+    <master auto="start"/>
+    <node pkg="triskarino_perception" type="get_objects_detection_server.py" name="objectsDetectionServer" output="screen" />
+    <node pkg="triskarino_perception" type="objects_detection_publisher.py" name="objectsDetectionPublisher" output="screen" />
+
+</launch>
+  

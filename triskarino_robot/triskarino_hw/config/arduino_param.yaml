@@ -1,0 +1,2 @@
+port: "/dev/serial/by-id/usb-Arduino__www.arduino.cc__0042_75735323230351A04231-if00"
+baud: 250000

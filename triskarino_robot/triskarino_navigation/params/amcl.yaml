@@ -1,0 +1,17 @@
+odom_model_type: "omni"
+laser_z_hit: 0.9
+laser_sigma_hit: 0.1
+laser_z_rand: 0.5
+laser_likelihood_max_dist: 15.0
+kld_err": 0.10
+kld_z": 0.5
+odom_alpha1: 0.25
+odom_alpha2: 0.05
+odom_alpha3: 0.05
+odom_alpha4: 0.25
+odom_alpha5: 0.25
+update_min_d: 0.1
+update_min_a: -0.0872665
+recovery_alpha_fast: 0.1
+recovery_alpha_slow: 0.001
+min_particles: 500

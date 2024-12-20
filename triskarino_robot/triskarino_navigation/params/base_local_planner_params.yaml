@@ -1,0 +1,25 @@
+_DWAPlannerROS:
+  max_vel_trans: 1.0
+  max_vel_x: 1.0
+  max_vel_y: 1.0
+  min_vel_x: -1.0
+  min_vel_y: -1.0
+  min_vel_trans: -1.0
+
+
+  max_rot_vel: 1.0
+  min_rot_vel: -1.0
+
+  acc_lim_th: 2.0
+  acc_lim_x: 2.0
+  acc_lim_y: 2.0
+
+  sim_time: 3.0
+
+  vx_sample: 20
+  vy_sample: 20
+  vth_sample: 40
+
+  xy_goal_tolerance: 0.20
+
+

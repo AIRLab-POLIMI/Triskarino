@@ -1,0 +1,6 @@
+<launch>
+
+  <node pkg="triskarino_hw" type="touchsensor_manager.py" name="touchsensor_manager" output="screen">
+    <rosparam command="load" file="$(find triskarino_hw)/config/touch_param.yaml" />
+  </node>
+</launch>

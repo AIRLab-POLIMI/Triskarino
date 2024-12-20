@@ -1,0 +1,7 @@
+<launch>
+    <include file="$(find twist_mux)/launch/twist_mux.launch" >
+       <arg name="cmd_vel_out" value="cmd_vel_out"/>
+       <arg name="config_topics" value="$(find triskarino_hw)/config/twist_mux.yaml"/>
+       <arg name="config_locks" value="$(find triskarino_hw)/config/twist_mux_locks.yaml"/>
+    </include>
+</launch>

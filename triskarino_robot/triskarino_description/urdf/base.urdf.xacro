@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<xacro:macro name="base" params="xyz rpy scale_factor">
+    <link name="plate_link">
+		<inertial>
+			<origin xyz="0.00000000 0.00000000 33.57142844"/>
+			<mass value="1.00000000"/>
+			<inertia ixx="6092.55688578" ixy="-0.00000000" ixz="0.00000000" iyy="6092.55696749" iyz="0.00000265" izz="11631.80010839"/>
+		  </inertial>
+	<visual>
+		<geometry>
+			<mesh scale="${scale_factor} ${scale_factor} ${scale_factor}" filename="package://triskarino_description/meshes/robot_base.stl"/>
+		</geometry>
+		<material name="base_material">
+			<color rgba="1 1 1 1"/>
+		</material>
+        <origin rpy="${rpy}"/>
+	</visual>
+	<collision>
+		<geometry>
+			<mesh scale="${scale_factor} ${scale_factor} ${scale_factor}" filename="package://triskarino_description/meshes/robot_base.stl"/>
+		</geometry>
+         <origin rpy="${rpy}"/>
+	</collision>
+
+	</link>
+	<joint name="plate_joint" type="fixed">
+		<parent link="base_link" />
+		<child link="plate_link" />
+		<origin xyz="${xyz}"  rpy="0 0 0"/>
+	</joint>
+
+		
+	<gazebo reference="plate_link">
+		<mu1 value="0.0"/>
+		<mu2 value="0.0"/>
+		<kp value="1000000"/>
+		<kd value="1"/>
+		<implicitSpringDamper>true</implicitSpringDamper>
+		<implicitSpringDamper>true</implicitSpringDamper>
+		<maxContacts value= "0"/>
+
+  	</gazebo>
+	
+</xacro:macro>
+
+    
+</robot>

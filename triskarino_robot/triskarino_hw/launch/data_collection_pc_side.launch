@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="triskarino_hw" type="image_saver.py" name="image_saver" output="screen" />
+    <node pkg="rosbag" type="record" name="rosbag_record_lidar_teleop" args="record -o ./teleop_lidar_data_collection /cmd_vel_out /scan_filtered /rpi_camera/image_name"/>   
+
+  </launch>

@@ -1,0 +1,24 @@
+<launch>
+    <!-- Description Launch files -->
+    <include file="$(find triskarino_description)/launch/state_publisher.launch" />
+    
+    <!-- Hw launch files-->
+    <include file="$(find triskarino_hw)/launch/teleop.launch" />
+    <include file="$(find triskarino_hw)/launch/lidar.launch" />
+    <include file="$(find triskarino_hw)/launch/sound_light.launch" />
+    <node pkg="triskarino_hw" type="camera_manager.py" name="cameraManager" output="screen"/>
+
+    <!-- Odometry launch -->
+    <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
+
+    <!-- Perception launch -->
+    <include file="$(find triskarino_perception)/launch/objects_detection.launch" />
+
+    <!-- Action controller launch -->
+    <node pkg="triskarino_action_controller" type="chase_person.py" name="personChaser" output="screen" />
+    
+    <node pkg="triskarino_action_controller" type="chase_toy.py" name="toyChaser" output="screen" />
+    
+
+
+</launch>

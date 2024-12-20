@@ -1,0 +1,25 @@
+topics:
+- name: navigation
+  topic: cmd_vel
+  timeout: 0.5
+  priority: 50
+- name    : joystick
+  topic   : cmd_joy
+  timeout : 0.5
+  priority: 70
+- name    : toy_chaser
+  topic   : cmd_vel_chaser
+  timeout : 0.5
+  priority: 52
+- name    : social_mov_lin
+  topic   : cmd_vel_social_lin
+  timeout : 0.5
+  priority: 52
+- name: social_mov_rot
+  topic: cmd_vel_social_rot
+  timeout: 0.5
+  priority: 52
+- name: person_chaser
+  topic: cmd_vel_person_chaser
+  timeout: 0.5
+  priority: 52

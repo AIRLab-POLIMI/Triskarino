@@ -1,0 +1,8 @@
+<launch>
+    <!-- <arg name="odometry_enabled" default="false"/> -->
+    <include file="$(find triskarino_hw)/launch/teleop.launch" >
+        <!-- <arg name="odometry_enabled" value="$(arg odometry_enabled)"/> -->
+    </include>
+    <include file="$(find triskarino_hw)/launch/lidar.launch" />
+   
+  </launch>

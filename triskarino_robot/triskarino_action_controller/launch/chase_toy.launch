@@ -1,0 +1,6 @@
+<launch>
+    <include file="$(find triskarino_hw)/launch/teleop.launch" />
+    <include file="$(find triskarino_perception)/launch/objects_detection.launch" />
+
+
+</launch>

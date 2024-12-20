@@ -1,0 +1,6 @@
+<launch>
+    <include file="$(find triskarino_hw)/launch/teleop.launch" >
+    </include>
+    <include file="$(find triskarino_hw)/launch/lidar.launch" />
+    <node pkg="triskarino_hw" type="camera_manager.py" name="camera_manager" output="screen" />
+  </launch>

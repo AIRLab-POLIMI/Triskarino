@@ -1,0 +1,8 @@
+<launch>
+    <master auto="start"/>
+    <node pkg="triskarino_hw" type="camera_manager.py" name="cameraManager" output="screen" launch-prefix="valgrind --tool=callgrind --callgrind-out-file='callgrind.cameraManager.%p'"/>
+    <node pkg="triskarino_perception" type="get_group_detection_server.py" name="groupDetectionServer" output="screen" launch-prefix="valgrind --tool=callgrind --callgrind-out-file='callgrind.groupDetectionServer.%p'"/>
+    <node pkg="triskarino_perception" type="get_person_position_server.py" name="personPositionServer" output="screen" launch-prefix="valgrind --tool=callgrind --callgrind-out-file='callgrind.personPositionServer.%p'"/>
+    <node pkg="triskarino_perception" type="get_person_nav_goal_server.py" name="personNavGoalServer" output="screen" launch-prefix="valgrind --tool=callgrind --callgrind-out-file='callgrind.personNavGoalServer.%p'"/>
+    <node pkg="triskarino_perception" type="image_detector_publisher.py" name="imageDetectorPublisher" output="screen" launch-prefix="valgrind --tool=callgrind --callgrind-out-file='callgrind.imageDetectorPublisher.%p'"/>
+</launch>

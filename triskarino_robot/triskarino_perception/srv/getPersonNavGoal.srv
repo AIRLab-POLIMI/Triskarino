@@ -1,0 +1,5 @@
+std_msgs/String person_frame
+std_msgs/String robot_frame
+std_msgs/Float32 stopping_distance
+---
+geometry_msgs/PoseArray target_positions

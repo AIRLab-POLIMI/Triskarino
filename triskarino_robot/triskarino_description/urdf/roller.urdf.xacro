@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!-- SCALING OF MASS AND INERTIAL MATRICES ACCORDING TO https://answers.ros.org/question/237421/calculating-inertial-matrix-for-gazebo/ -->
+<xacro:macro
+	name="roller_macro"
+	params="parent name xyz rpy">
+
+		<link name="roller_${name}_${parent}_link">
+			<inertial>
+				<origin xyz="0.00000004 -0.00000000 -0.00000002"/>
+				<mass value="0.05000000"/>
+				<inertia ixx="0.00000328" ixy="0.00000000" ixz="-0.00000000" iyy="0.00000328" iyz="-0.00000000" izz="0.00000191"/>
+			  </inertial>
+			<visual>
+				<geometry>
+					<mesh filename="package://triskarino_description/meshes/roller_scaled.stl"/>
+				</geometry>
+				<material name="roller_material">
+					<color rgba="0.1 0.1 0.1 1"/>
+				</material>
+			</visual>
+			<collision>
+				<geometry>
+					<mesh filename="package://triskarino_description/meshes/roller_scaled.stl"/>
+				</geometry>
+			</collision>
+		</link>
+	<gazebo reference="roller_${name}_{parent}">
+    		<material>Gazebo/Black</material>
+  	</gazebo>
+		<joint name="roller_${name}_${parent}_joint" type="fixed">
+			<parent link="${parent}"/>
+			<child link="roller_${name}_${parent}_link"/>
+			<axis xyz="0 0 1"/>
+			<origin xyz="${xyz}" rpy="${rpy}"/>
+
+		</joint>	
+		<gazebo reference="roller_${name}_${parent}_link">
+			<mu1 value="0.0"/>
+			<mu2 value="0.0"/>
+			<minDepth>0.001</minDepth>
+			<kp value="1000000"/>
+			<kd value="1"/>
+			<maxContacts value= "0"/>
+
+		</gazebo>
+	</xacro:macro>
+
+</robot>

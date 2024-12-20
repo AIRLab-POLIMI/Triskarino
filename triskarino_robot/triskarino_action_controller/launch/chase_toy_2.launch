@@ -1,0 +1,8 @@
+<launch>
+   
+    <node pkg="triskarino_action_controller" type="chase_toy.py" name="toyChaser" output="screen" />
+    <node pkg="triskarino_action_controller" type="chase_toy_tree.py" name="toyChaserTree" output="screen"  />
+
+
+
+</launch>

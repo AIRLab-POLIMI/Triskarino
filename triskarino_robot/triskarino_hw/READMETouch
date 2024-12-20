@@ -1,0 +1,52 @@
+Sistema di interpretazione del tocco
+
+Lettura dei dati
+Per poter leggere i dati e salvali in formato csv basta utilizzare il launch file presente in triskarino_hw "touchreader.launch"
+In questo modo verranno salvati i dati dei 6 sensori di pressione, dei 12 sensori di flessione, della IMU e degli input del Gamepad.
+In particolare, vengono usati i topic 'touch_data_array', 'touch_data_head', 'cmd_vel_out_filled', 'imu/data_filtered'.
+
+N.B.: i dati provenienti dal sistema di tocco vengono salvati SENZA calibrazione
+
+Classificazione
+Per poter classificare le interazioni si utilizza il launch file presente in triskarino_perception "touchclassification.launch"
+In questo processono viene letto cio' che è pubblicato negli stessi topic di prima.
+Se il robot è in movimento viene chiamato il servizio di detection. Se il robot è statico viene chiamato il servizio di classificazione.
+In entrambi i casi esiste un solo servizio che viene chiamato sei volte, una volta per ogni patch.
+Entrambi i servizi ritornano una stringa che indica il tipo di interazione avvenuta (se avvenuta)
+
+N.B.: se il servizio di classficazione da errore, controllare per prima cosa la compatibilità fra le diverse versioni delle librerie usate da tsfresh
+
+Interazione
+L'interazione di luci è basata sul codice 'light' presente in arduino_control e sul codice 'teleop_manager' in triskarino_hw
+Sull'Arduino c'è la possibilità di usare luci a intermittenza, a dissolvenza o arcobaleno.
+C'è la possibilità di modificare il colore, l'intensità luminosa e la velocità di intermittenza o dissolvenza.
+Le modifiche possono essere fatte tramite gamepad oppure utilizzando il file 'MyParams.cfg' in triskarino_hw e RQT
+
+L'interazione di suoni prevede la semplice chiamata di un comando sulla shell.
+Viene utilizzato un nodo a parte (sound_manager) per la gestione di questo comando. Il nodo era già presente e non è stato toccato, ma si può benissimo evitare l'utilizzo.
+I souni sono salvati nella cartella resources.
+Ci potrebbe essere un problema legato alla disponibilità della porta seriale. Spesso il suono non funziona. Per farlo funzionare basta staccare e riattaccare il cavo USB MENTRE il nodo è attivo.
+
+
+PIN ARDUINO (aggiornato: 22/03/2024)
+Arduino Uno:
+A0 : pressione della testa
+A1 : flessione anteriore della testa
+A2 : flessione posteriore della testa
+
+Arduino Mega:
+A0 : pressione patch 1
+A1 : pressione patch 0
+A2 : pressione patch 2
+A3 : flessione dx patch 4
+A4 : flessione dx patch 3
+A5 : flessione dx patch 0
+A6 : flessione dx patch 2
+A7 : flessione sx patch 3
+A8 : flessione sx patch 2
+A9 : flessione sx patch 4
+A10 : flessione sx patch 1
+A11 : pressione patch 4
+A12 : flessione sx patch 0
+A13 : flessione dx patch 1
+A15 : pressione patch 3

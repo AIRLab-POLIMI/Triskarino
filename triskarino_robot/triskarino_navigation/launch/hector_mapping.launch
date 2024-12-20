@@ -1,0 +1,10 @@
+<launch>
+<include file="$(find triskarino_hw)/launch/teleop+lidar.launch"/>
+<include file="$(find triskarino_description)/launch/state_publisher.launch"/>
+<include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
+<node pkg="hector_mapping" type="hector_mapping" name="hector_mapping" output="screen" >
+    <rosparam command="load" file="$(find triskarino_navigation)/params/hector.yaml" />
+    <remap from="scan" to="scan_filtered" />
+</node>
+
+</launch>

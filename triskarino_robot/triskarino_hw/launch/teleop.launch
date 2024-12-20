@@ -1,0 +1,22 @@
+<launch>
+  
+  <!-- <arg name="odometry_enabled" default="false"/>
+  <group if="$(arg odometry_enabled)">
+    <node pkg="triskarino_hw" type="odom_manager.py" name="odom_manager" output="screen" />
+ </group> -->
+  <node pkg="triskarino_hw" type="teleop_manager.py" name="teleop_manager" output="screen" />
+  <node pkg="triskarino_hw" type="speed_manager.py" name="speed_manager" output="screen" />
+  <include file="$(find triskarino_hw)/launch/twist_mux.launch"/>
+  <node pkg="rosserial_python" type="serial_node.py" name="serial_connection_arduino" output="screen">
+    <rosparam command="load" file="$(find triskarino_hw)/config/arduino_param.yaml" />
+  </node>
+  <node pkg="rosserial_python" type="serial_node.py" name="arduin4light" output="screen">
+    <param name="port" type="string" value="/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"/>
+    <param name="baud" type="int" value="115200"/>
+  </node>
+  
+ <!--  <node pkg="triskarino_hw" type="lights_manager.py" name="lights_manager" output="screen" /> -->
+  <node pkg="triskarino_hw" type="sound_manager.py" name="sound_manager" output="screen" />
+
+
+</launch>

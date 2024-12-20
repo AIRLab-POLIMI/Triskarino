@@ -1,0 +1,4 @@
+triskarino_msgs/Person person
+---
+geometry_msgs/PointStamped position
+visualization_msgs/Marker angle_visualizer

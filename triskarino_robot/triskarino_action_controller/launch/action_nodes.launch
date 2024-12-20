@@ -1,0 +1,8 @@
+<launch>
+    <!-- Light Manager and Behavior Tree-->
+    <node pkg="triskarino_hw" type="lights_manager.py" name="lightsManager" output="screen" />
+    <node pkg="triskarino_action_controller" type="find_and_approach_person.py" name="treeManager" output="screen" />
+
+
+
+</launch>

@@ -1,0 +1,11 @@
+global_costmap:
+  global_frame: map
+  robot_base_frame: base_link
+  update_frequency: 5.0
+  static_map: true
+  #Following parameters taken from navigation tuning guide
+  cost_factor: 55
+  neutral_cost: 66
+  lethal_cost: 253
+  default_tolerance: 0.1
+  

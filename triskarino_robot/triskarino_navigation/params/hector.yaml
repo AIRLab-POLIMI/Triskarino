@@ -1,0 +1,10 @@
+base_frame: "base_link"
+map_frame: "map"
+odom_frame: "odom"
+pub_map_odom_transform: "true"
+laser_min_dist: 0.021
+laser_max_dist: 5
+map_resolution: 0.05
+map_size: 100
+map_update_angle_tresh: 0.01
+

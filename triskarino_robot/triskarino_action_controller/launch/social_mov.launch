@@ -1,0 +1,7 @@
+<launch>
+    <include file="$(find triskarino_hw)/launch/teleop+lidar.launch" />
+    <include file="$(find rf2o_laser_odometry)/launch/rf2o_laser_odometry.launch"/>
+    <include file="$(find triskarino_description)/launch/state_publisher.launch"/>
+    <node pkg="triskarino_action_controller" type="social_movement_tree.py" name="treeManager" output="screen" />
+    <node pkg="triskarino_hw" type="lidar_movement_blocker.py" name="lidarMovementBlocker" output="screen" />
+</launch>

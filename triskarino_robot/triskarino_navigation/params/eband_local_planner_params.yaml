@@ -1,0 +1,16 @@
+EBandPlannerRos:
+  max_vel_lin: 1.0
+  min_vel_lin: 0.2
+  max_vel_th: 1.0
+  min_vel_th: 0.3
+  min_in_place_vel_th: 0.3
+  in_place_lin_vel: 0.0
+  in_place_trans_vel: 0.0
+  max_acceleration: 2.0
+  max_translational_acceleration: 2.0
+  max_roational_acceleration: 2.0
+  differential_drive: false 
+  
+
+
+

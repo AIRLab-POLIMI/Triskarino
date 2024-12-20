@@ -1,0 +1,107 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="default">
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- A ground plane -->
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>100</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode> 
+                <kp>1e+8</kp>
+                <kd>1</kd>
+              </ode>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>20</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+
+    <physics type="ode">
+      <ode>
+        <solver>
+          <type>world</type>
+        </solver>
+        <constraints>
+          <cfm>0.01</cfm>
+          <real_time_factor>1</real_time_factor>
+          <real_time_update_rate>1000</real_time_update_rate>
+          <contact_surface_layer>0.00001</contact_surface_layer>
+        </constraints>
+      </ode>
+      <max_step_size>0.001</max_step_size>
+    </physics>
+   
+
+    <model name="triskarino">
+      <include>
+        <uri>model://triskarino_description</uri>
+      </include>
+      <!-- Attach the plugin to this model -->
+      <plugin name="omniwheel_control" filename="libomniwheel_control.so">
+        <wheelRadius>0.03</wheelRadius>
+        <wheelToCenterDist>0.165</wheelToCenterDist>
+        <Kp>3</Kp>
+        <Ki>0</Ki>
+        <Kd>0</Kd>
+        <leftJoint>triskarino::rim_left_joint</leftJoint>
+        <backJoint>triskarino::rim_back_joint</backJoint>
+        <rightJoint>triskarino::rim_right_joint</rightJoint>
+        <maxLinearSpeed>2</maxLinearSpeed>
+        <maxAngularSpeed>6.28</maxAngularSpeed>
+        <velTopicName>/cmd_vel</velTopicName>
+        <odomTopicName>/odom</odomTopicName>
+        <odometryFrame>/odom</odometryFrame>
+        <robotBaseFrame>base_link</robotBaseFrame>
+        <publishOdomTf>true</publishOdomTf>
+        <publishWheelJointState>true</publishWheelJointState>
+        <publishWheelTf>true</publishWheelTf>
+        <updateRate>100</updateRate>
+        <odomSource>encoder</odomSource>
+      </plugin>
+    </model>
+
+  </world>
+</sdf>

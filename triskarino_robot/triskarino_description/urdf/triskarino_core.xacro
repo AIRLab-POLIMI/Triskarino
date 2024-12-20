@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="triskarino">
+
+	<xacro:include filename="$(find triskarino_description)/urdf/rim.urdf.xacro"/>
+    <xacro:include filename="$(find triskarino_description)/urdf/base.urdf.xacro"/>
+    <xacro:include filename="$(find triskarino_description)/urdf/triskarino_cylinder.xacro"/>
+    <xacro:include filename="$(find triskarino_description)/urdf/materials.xacro"/>
+    <xacro:include filename="$(find triskarino_description)/urdf/hokuyo.xacro"/>
+    
+    <link name="base_link"/>
+	
+    <!-- BASE PLATE -->
+    <xacro:base 
+        xyz="0 0 0.1"
+        scale_factor="0.001"
+        rpy="0 3.14 -1.570796326794896"
+        />
+
+    
+    <joint name="base_footprint_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="base_footprint"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <link name="base_footprint"></link>
+
+    <!-- LEFT WHEEL -->
+	<xacro:rim_macro
+		name="left"
+		color="0.3 0 0"
+		xyz="0.0825 -0.142894191624 -0.035"
+		rpy="1.570796326794896 0 -2.61799387799"
+        />
+
+    <!-- BACK WHEEL -->
+	<xacro:rim_macro
+		name="back"
+		color="0 0.3 0"
+		xyz="-0.1650 0 -0.035"
+		rpy="1.570796326794896 0 1.570796326794896"
+        />
+    
+    <!-- RIGHT WHEEL -->
+	<xacro:rim_macro
+		name="right"
+		color="0 0 0.3"
+		xyz="0.0825 0.142894191624 -0.035"
+		rpy="1.570796326794896 0 -0.52359877559"
+        />
+    
+    <!-- CYLINDER USED AS AXIS FOR THE ROBOT, Z HAS TO BE ADJUSTED ACCORDING TO THE LENGTH OF THE AXIS -->
+    <xacro:cylinder
+        name="axis"
+        xyz="0 0 0.2"
+        rpy="0 0 0"
+        parent="plate_link"
+        color="grey"
+        radius="0.01"
+        length="0.4"
+        mass="1"
+        />
+    
+    
+    <!-- FIRST CYLINDER SET AT THE BASE OF THE LIDAR -->
+    <xacro:cylinder
+        name="layer_0"
+        xyz="0 0 -0.17"
+        rpy="0 0 0"
+        parent="axis_link"
+        color="grey"
+        radius="0.2"
+        length="0.01"
+        mass="1"
+        />
+    
+    <xacro:hokuyo_ust10_mount 
+        topic="scan"
+        parent_link="layer_0_link"
+        xyz="0.11 0 0"
+        rpy="0 0 0"
+    />
+
+    <link name="imu_link">
+    </link>
+    <joint
+        name="imu_joint"
+        type="fixed">
+        <origin
+          xyz="0 0 0"
+          rpy="0 0 0" />
+        <parent
+          link="laser_mount" />
+        <child
+          link="imu_link" />
+        <axis
+          xyz="0 0 0" />
+      </joint>
+
+    <joint name="camera_joint" type="fixed">
+        <parent link="layer_0_link"/>
+        <child link="camera_link"/>
+        <origin xyz="0.2 0 0" rpy="0 0 0"/>
+    </joint>
+   
+    <link name="camera_link">
+        <visual>
+            <geometry>
+                <box size="0.010 0.03 0.03"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+    </link>
+
+	<gazebo reference="plate_link">
+    		<material>Gazebo/White</material>
+  	</gazebo>
+
+			
+    <gazebo reference="base_link">
+		<mu1 value="0.0"/>
+		<mu2 value="0.0"/>
+  	</gazebo>
+
+	<gazebo>
+        <plugin name="triskarino_controller" filename="libgazebo_ros_planar_move.so">
+            <commandTopic>/cmd_vel</commandTopic>
+            <odometryTopic>/odom</odometryTopic>
+            <odometryFrame>/odom</odometryFrame>
+            <odometryRate>0</odometryRate>
+            <robotBaseFrame>base_link</robotBaseFrame>
+        </plugin>
+
+    </gazebo>
+
+</robot>

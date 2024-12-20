@@ -1,0 +1,15 @@
+<launch>
+    
+
+    <!-- Start ROS Servers-->
+    <node pkg="triskarino_perception" type="dynamic_detector_server.py" name="dynamic_detector_server" output="screen" />
+    <node pkg="triskarino_perception" type="static_classifier_server.py" name="static_classifier_server" output="screen" />
+
+
+    <!-- Start ROS node for Touch Data Classification-->
+    <node pkg="triskarino_perception" type="touchclassifier_manager.py" name="touchclassifier_manager" output="screen" />
+   
+
+
+   
+</launch>
