@@ -138,3 +138,7 @@ Now you should be able to launch `roscore` on the robot and see its nodes from y
 
 ## Final Step
 Before running `Inference.py`, ensure that the **paths to your YOLO model** and **XGBoost model** inside the code are correctly set for your system.
+
+---
+
+For any information on this program, you should be able to contact me at: thierry.jannin1@gmail.com
