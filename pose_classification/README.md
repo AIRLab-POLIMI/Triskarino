@@ -77,6 +77,7 @@ Example: If ~70% of keypoints are missing but some upper body keypoints are visi
 ## Demo
 A demo of the system working (recommended at 1.5× speed):  
 👉 [Watch on YouTube](https://www.youtube.com/watch?v=8wJcS_wXHeY)
+👉 [Watch on YouTube (Alernative Take)](https://www.youtube.com/watch?v=28scsyvfNVQ)
 
 ---
 
