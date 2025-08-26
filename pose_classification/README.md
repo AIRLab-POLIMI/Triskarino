@@ -141,7 +141,7 @@ Before running `Inference.py`, ensure that the **paths to your YOLO model** and 
 
 ---
 
-As you can witness in the demos, this setup is not flawless and there is room for improvement and optimization which are very welcomed.
-For any information on this program, you should be able to contact me at: thierry.jannin1@gmail.com
+As you can witness in the demos, this setup is not flawless and there is room for improvement and optimization which are very welcomed.  
+For any information on this program, you should be able to contact me at: thierry.jannin1@gmail.com  
 
-Master Thesis Project realized at AIRLab (PoliMi) between January and July 2025
+Master Thesis Project realized at AIRLab (PoliMi) between January and July 2025  
